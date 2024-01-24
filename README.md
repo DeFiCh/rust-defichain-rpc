@@ -1,21 +1,21 @@
 [![Status](https://travis-ci.org/rust-bitcoin/defichain-rpc.png?branch=master)](https://travis-ci.org/rust-bitcoin/defichain-rpc)
 
-# Rust RPC client for Bitcoin Core JSON-RPC
+# Rust RPC client for DeFiChain JSON-RPC
 
-This is a Rust RPC client library for calling the Bitcoin Core JSON-RPC API. It provides a layer of abstraction over
-[rust-jsonrpc](https://github.com/apoelstra/rust-jsonrpc) and makes it easier to talk to the Bitcoin JSON-RPC interface
+This is a Rust RPC client library for calling the DeFiChain JSON-RPC API. It provides a layer of abstraction over
+[rust-jsonrpc](https://github.com/apoelstra/rust-jsonrpc) and makes it easier to talk to the DeFiChain JSON-RPC interface
 
 This git package compiles into two crates.
 
 1. [defichain-rpc](https://crates.io/crates/defichain-rpc) - contains an implementation of an rpc client that exposes
-   the Bitcoin Core JSON-RPC APIs as rust functions.
+   the DeFiChain JSON-RPC APIs as rust functions.
 
 2. [defichain-rpc-json](https://crates.io/crates/defichain-rpc-json) - contains rust data structures that represent
-   the json responses from the Bitcoin Core JSON-RPC APIs. defichain-rpc depends on this.
+   the json responses from the DeFiChain JSON-RPC APIs. defichain-rpc depends on this.
 
 # Usage
 
-Given below is an example of how to connect to the Bitcoin Core JSON-RPC for a Bitcoin Core node running on `localhost`
+Given below is an example of how to connect to the DeFiChain JSON-RPC for a DeFiChain node running on `localhost`
 and print out the hash of the latest block.
 
 It assumes that the node has password authentication setup, the RPC interface is enabled at port `8332` and the node

@@ -8,9 +8,9 @@
 // If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //
 
-//! # Rust Client for Bitcoin Core API
+//! # Rust Client for DeFiChain API
 //!
-//! This is a client library for the Bitcoin Core JSON-RPC API.
+//! This is a client library for the DeFiChain JSON-RPC API.
 //!
 
 #![crate_name = "defichain_rpc_json"]

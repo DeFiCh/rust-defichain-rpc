@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum EstimateMode {
