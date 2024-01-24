@@ -33,6 +33,7 @@ use json::bitcoin::hex::HexToBytesIter;
 mod client;
 mod error;
 mod queryable;
+// mod traits;
 
 pub use crate::client::*;
 pub use crate::error::Error;
