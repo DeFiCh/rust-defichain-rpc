@@ -5,7 +5,7 @@ pub trait WalletRPC {
     fn get_balance(&self) -> Result<BigNumber>;
     fn get_balances(&self) -> Result<WalletBalances>;
     fn get_new_address(&self) -> Result<String>;
-    fn get_transaction(&self, txid: String) -> Result<InWalletTransaction>;
+    fn get_transaction(&self, txid: bitcoin::Txid) -> Result<InWalletTransaction>;
     fn get_unconfirmed_balance(&self) -> Result<BigNumber>;
     fn get_wallet_info(&self) -> Result<WalletInfo>;
     fn import_priv_key(&self, privkey: String) -> Result<()>;

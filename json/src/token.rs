@@ -62,7 +62,7 @@ pub struct TokenPagination {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UTXO {
-    txid: String,
+    txid: bitcoin::Txid,
     vout: u64,
 }
 
@@ -80,7 +80,7 @@ pub struct GetCustomTxResult {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DecodeCustomTxResult {
-    txid: String,
+    txid: bitcoin::Txid,
     r#type: String,
     valid: bool,
     results: serde_json::Value,

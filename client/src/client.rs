@@ -17,6 +17,7 @@ use std::{fmt, result};
 
 use crate::{bitcoin, deserialize_hex};
 use bitcoin::hex::DisplayHex;
+use json::bitcoin::Txid;
 use jsonrpc;
 use serde;
 use serde_json;
@@ -41,7 +42,7 @@ pub type Result<T> = result::Result<T, Error>;
 /// for use as RPC arguments
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct JsonOutPoint {
-    pub txid: bitcoin::Txid,
+    pub txid: Txid,
     pub vout: u32,
 }
 
