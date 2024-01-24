@@ -24,6 +24,9 @@ extern crate serde_json;
 
 use std::collections::HashMap;
 
+pub mod mining;
+pub mod token;
+
 use bitcoin::address::NetworkUnchecked;
 use bitcoin::block::Version;
 use bitcoin::consensus::encode;
