@@ -1,4 +1,4 @@
-pub trait TokenRPC {
+pub trait TokenRPC: RpcApi {
     fn burn_tokens(
         &self,
         amounts: String,

@@ -1,4 +1,4 @@
-pub trait PoolPairRPC {
+pub trait PoolPairRPC: RpcApi {
     fn add_pool_liquidity(
         &self,
         from: AddPoolLiquiditySource,

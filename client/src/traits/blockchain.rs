@@ -1,4 +1,4 @@
-pub trait BlockchainRPC {
+pub trait BlockchainRPC: RpcApi {
     fn get_best_block_hash(&self) -> Result<String>;
     fn get_block(&self, hash: String) -> Result<String>;
     fn get_block_count(&self) -> Result<u64>;

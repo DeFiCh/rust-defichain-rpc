@@ -1,4 +1,4 @@
-pub trait OracleRPC {
+pub trait OracleRPC: RpcApi {
     fn appoint_oracle(&self, address: String) -> Result<String>;
     fn get_fixed_interval_price(&self, id: String) -> Result<FixedIntervalPrice>;
     fn get_future_swap_block(&self) -> Result<u64>;

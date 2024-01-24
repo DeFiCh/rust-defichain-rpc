@@ -1,4 +1,4 @@
-pub trait WalletRPC {
+pub trait WalletRPC: RpcApi {
     fn create_wallet(&self, wallet_name: String) -> Result<CreateWalletResult>;
     fn dump_priv_key(&self, address: String) -> Result<String>;
     fn get_address_info(&self, address: String) -> Result<AddressInfo>;

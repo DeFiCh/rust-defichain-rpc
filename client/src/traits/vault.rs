@@ -1,4 +1,4 @@
-pub trait VaultRPC {
+pub trait VaultRPC: RpcApi {
     fn close_vault(&self, close_vault: CloseVault, utxos: Option<UTXO>) -> Result<String>;
     fn create_vault(&self, vault: CreateVault, utxos: Option<UTXO>) -> Result<String>;
     fn deposit_to_vault(&self, deposit_vault: DepositVault, utxos: Option<UTXO>) -> Result<String>;

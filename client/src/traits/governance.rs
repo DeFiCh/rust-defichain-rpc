@@ -1,4 +1,4 @@
-pub trait GovernanceRPC {
+pub trait GovernanceRPC: RpcApi {
     fn create_gov_cfp(&self, data: CFPData, utxos: Option<UTXO>) -> Result<String>;
     fn create_gov_voc(&self, data: VOCData, utxos: Option<UTXO>) -> Result<String>;
     fn get_gov_proposal(&self, proposal_id: String) -> Result<ProposalInfo>;

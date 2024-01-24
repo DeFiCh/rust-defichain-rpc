@@ -1,4 +1,4 @@
-pub trait ICXOrderBookRPC {
+pub trait ICXOrderBookRPC: RpcApi {
     fn claim_dfchtlc(
         &self,
         dfchtlc_tx_id: String,

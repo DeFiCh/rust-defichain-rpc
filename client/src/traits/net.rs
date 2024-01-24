@@ -1,4 +1,4 @@
-pub trait NetRPC {
+pub trait NetRPC: RpcApi {
     fn get_connection_count(&self) -> Result<u64>;
     fn get_net_totals(&self) -> Result<NetTotals>;
     fn get_network_info(&self) -> Result<NetworkInfo>;

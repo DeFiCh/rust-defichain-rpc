@@ -1,4 +1,4 @@
-pub trait MasternodeRPC {
+pub trait MasternodeRPC: RpcApi {
     fn clear_mempool(&self) -> Result<()>;
     fn create_masternode(
         &self,

@@ -1,4 +1,4 @@
-pub trait AccountRPC {
+pub trait AccountRPC: RpcApi {
     fn account_to_account(&self, from: String, payload: BalanceTransferPayload) -> Result<String>;
     fn account_to_utxos(&self, from: String, payload: BalanceTransferPayload) -> Result<String>;
     fn future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String>;

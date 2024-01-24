@@ -1,4 +1,4 @@
-pub trait RawTxRPC {
+pub trait RawTxRPC: RpcApi {
     fn create_raw_transaction(&self, outputs: CreateRawTxOut) -> Result<String>;
     fn decode_raw_transaction(&self, hexstring: String, iswitness: bool) -> Result<RawTransaction>;
     fn get_raw_transaction(&self, txid: bitcoin::Txid) -> Result<String>;

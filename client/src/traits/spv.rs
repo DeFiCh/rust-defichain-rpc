@@ -1,4 +1,4 @@
-pub trait SpvRPC {
+pub trait SpvRPC: RpcApi {
     fn claim_htlc(
         &self,
         script_address: String,
