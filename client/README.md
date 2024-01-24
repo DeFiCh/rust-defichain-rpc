@@ -1,11 +1,9 @@
-bitcoincore-rpc
-===============
+# defichain-rpc
 
-Rust client library for the Bitcoin Core daemon's JSON-RPC API.
+Rust client library for the DeFichain daemon's JSON-RPC API.
 
-Separate `bitcoincore-rpc-json` crate with the JSON-enabled data types used 
+Separate `defichain-rpc-json` crate with the JSON-enabled data types used
 in the interface of this crate.
-
 
 ## MSRV
 

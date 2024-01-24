@@ -21,7 +21,7 @@ use jsonrpc;
 use serde;
 use serde_json;
 
-use crate::bitcoin::address::{NetworkUnchecked, NetworkChecked};
+use crate::bitcoin::address::{NetworkChecked, NetworkUnchecked};
 use crate::bitcoin::hashes::hex::FromHex;
 use crate::bitcoin::secp256k1::ecdsa::Signature;
 use crate::bitcoin::{
@@ -891,7 +891,10 @@ pub trait RpcApi: Sized {
     }
 
     /// Generate new address for receiving change
-    fn get_raw_change_address(&self, address_type: Option<json::AddressType>) -> Result<Address<NetworkUnchecked>> {
+    fn get_raw_change_address(
+        &self,
+        address_type: Option<json::AddressType>,
+    ) -> Result<Address<NetworkUnchecked>> {
         self.call("getrawchangeaddress", &[opt_into_json(address_type)?])
     }
 
@@ -1182,7 +1185,11 @@ pub trait RpcApi: Sized {
         self.call("finalizepsbt", handle_defaults(&mut args, &[true.into()]))
     }
 
-    fn derive_addresses(&self, descriptor: &str, range: Option<[u32; 2]>) -> Result<Vec<Address<NetworkUnchecked>>> {
+    fn derive_addresses(
+        &self,
+        descriptor: &str,
+        range: Option<[u32; 2]>,
+    ) -> Result<Vec<Address<NetworkUnchecked>>> {
         let mut args = [into_json(descriptor)?, opt_into_json(range)?];
         self.call("deriveaddresses", handle_defaults(&mut args, &[null()]))
     }
@@ -1270,7 +1277,7 @@ pub struct Client {
 
 impl fmt::Debug for Client {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "bitcoincore_rpc::Client({:?})", self.client)
+        write!(f, "defichain_rpc::Client({:?})", self.client)
     }
 }
 
@@ -1317,7 +1324,7 @@ impl RpcApi for Client {
             .collect::<Result<Vec<_>>>()?;
         let req = self.client.build_request(&cmd, &raw_args);
         if log_enabled!(Debug) {
-            debug!(target: "bitcoincore_rpc", "JSON-RPC request: {} {}", cmd, serde_json::Value::from(args));
+            debug!(target: "defichain_rpc", "JSON-RPC request: {} {}", cmd, serde_json::Value::from(args));
         }
 
         let resp = self.client.send_request(req).map_err(Error::from);
@@ -1331,13 +1338,13 @@ fn log_response(cmd: &str, resp: &Result<jsonrpc::Response>) {
         match resp {
             Err(ref e) => {
                 if log_enabled!(Debug) {
-                    debug!(target: "bitcoincore_rpc", "JSON-RPC failed parsing reply of {}: {:?}", cmd, e);
+                    debug!(target: "defichain_rpc", "JSON-RPC failed parsing reply of {}: {:?}", cmd, e);
                 }
             }
             Ok(ref resp) => {
                 if let Some(ref e) = resp.error {
                     if log_enabled!(Debug) {
-                        debug!(target: "bitcoincore_rpc", "JSON-RPC error for {}: {:?}", cmd, e);
+                        debug!(target: "defichain_rpc", "JSON-RPC error for {}: {:?}", cmd, e);
                     }
                 } else if log_enabled!(Trace) {
                     // we can't use to_raw_value here due to compat with Rust 1.29
@@ -1346,7 +1353,7 @@ fn log_response(cmd: &str, resp: &Result<jsonrpc::Response>) {
                     )
                     .unwrap();
                     let result = resp.result.as_ref().unwrap_or(&def);
-                    trace!(target: "bitcoincore_rpc", "JSON-RPC response for {}: {}", cmd, result);
+                    trace!(target: "defichain_rpc", "JSON-RPC response for {}: {}", cmd, result);
                 }
             }
         }

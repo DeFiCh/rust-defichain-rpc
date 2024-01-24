@@ -1,7 +1,6 @@
-bitcoincore-rpc-json
-====================
+# defichain-rpc-json
 
-A collection of JSON-enabled data types used in the `bitcoincore-rpc` crate.
+A collection of JSON-enabled data types used in the `defichain-rpc` crate.
 
 # License
 
