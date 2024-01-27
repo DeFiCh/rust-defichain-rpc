@@ -24,6 +24,7 @@ extern crate serde_json;
 
 use std::collections::HashMap;
 
+pub mod governance;
 pub mod mining;
 pub mod token;
 

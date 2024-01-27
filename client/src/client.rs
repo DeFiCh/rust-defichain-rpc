@@ -65,7 +65,7 @@ impl Into<OutPoint> for JsonOutPoint {
 }
 
 /// Shorthand for converting a variable into a serde_json::Value.
-fn into_json<T>(val: T) -> Result<serde_json::Value>
+pub fn into_json<T>(val: T) -> Result<serde_json::Value>
 where
     T: serde::ser::Serialize,
 {

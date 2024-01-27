@@ -33,11 +33,12 @@ use json::bitcoin::hex::HexToBytesIter;
 mod client;
 mod error;
 mod queryable;
-// mod traits;
+mod traits;
 
 pub use crate::client::*;
 pub use crate::error::Error;
 pub use crate::queryable::*;
+pub use crate::traits::*;
 
 fn deserialize_hex<T: Decodable>(hex: &str) -> Result<T> {
     let mut reader = HexToBytesIter::new(&hex)?;
