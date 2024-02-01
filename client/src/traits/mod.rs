@@ -1,5 +1,5 @@
 // mod account;
-// mod blockchain;
+mod blockchain;
 // mod evm;
 mod governance;
 // mod icxorderbook;
@@ -17,4 +17,5 @@ mod governance;
 // mod vault;
 // mod wallet;
 
+pub use blockchain::BlockchainRPC;
 pub use governance::GovernanceRPC;

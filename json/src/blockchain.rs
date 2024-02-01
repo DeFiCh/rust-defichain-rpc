@@ -31,28 +31,30 @@ pub struct BlockchainInfo {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Block<T> {
-    hash: BlockHash,
-    confirmations: u64,
-    strippedsize: u64,
-    size: u64,
-    weight: u64,
-    height: u64,
-    masternode: String,
-    minter: String,
-    minted_blocks: u64,
-    stake_modifier: String,
-    version: u64,
-    version_hex: String,
-    merkleroot: String,
-    time: u64,
-    mediantime: u64,
-    bits: String,
-    difficulty: u64,
-    chainwork: String,
-    tx: Vec<T>,
-    n_tx: u64,
-    previousblockhash: String,
-    nextblockhash: String,
+    pub hash: BlockHash,
+    pub height: u32,
+    pub confirmations: u64,
+    pub strippedsize: u64,
+    pub size: u64,
+    pub weight: u64,
+    pub masternode: String,
+    pub minter: String,
+    pub minted_blocks: u64,
+    pub stake_modifier: String,
+    pub version: i32,
+    pub version_hex: String,
+    pub merkleroot: String,
+    pub time: i64,
+    pub mediantime: i64,
+    pub bits: String,
+    pub difficulty: f64,
+    pub chainwork: String,
+    pub tx: Vec<T>,
+    pub n_tx: u64,
+    pub previousblockhash: BlockHash,
+    pub nextblockhash: Option<BlockHash>,
+    #[serde(skip)]
+    pub nonutxo: Option<serde_json::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -77,43 +79,56 @@ pub struct BlockHeader {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Transaction {
-    txid: Txid,
-    hash: String,
-    version: u64,
-    size: u64,
-    vsize: u64,
-    weight: u64,
-    locktime: u64,
-    vin: Vec<Vin>,
-    vout: Vec<Vout>,
-    hex: String,
+    pub txid: Txid,
+    pub hash: String,
+    pub version: u32,
+    pub size: u64,
+    pub vsize: u64,
+    pub weight: u64,
+    pub locktime: u64,
+    pub vin: Vec<Vin>,
+    pub vout: Vec<Vout>,
+    pub hex: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptSig {
     asm: String,
-    hex: String,
+    pub hex: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum Vin {
+    Coinbase(VinCoinbase),
+    Standard(VinStandard),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Vin {
-    coinbase: Option<String>,
-    txid: Txid,
-    vout: u64,
-    script_sig: ScriptSig,
-    txinwitness: Option<Vec<String>>,
-    sequence: String,
+pub struct VinCoinbase {
+    pub coinbase: String,
+    pub sequence: i64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VinStandard {
+    pub txid: Txid,
+    pub vout: u64,
+    pub script_sig: ScriptSig,
+    pub txinwitness: Option<Vec<String>>,
+    pub sequence: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
-    value: i64,
-    n: u64,
-    script_pub_key: ScriptPubKey,
-    token_id: u64,
+    pub value: f64,
+    pub n: u64,
+    pub script_pub_key: ScriptPubKey,
+    pub token_id: Option<u64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -142,11 +157,11 @@ pub struct TxOutSetInfo {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptPubKey {
-    asm: String,
-    hex: String,
-    r#type: String,
-    req_sigs: u64,
-    addresses: Vec<String>,
+    pub asm: String,
+    pub hex: String,
+    pub r#type: String,
+    req_sigs: Option<u64>,
+    pub addresses: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -258,4 +273,12 @@ pub struct ChainTxStats {
     window_tx_count: u64,
     window_interval: u64,
     txrate: u64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetBlockResult {
+    Full(Block<Transaction>),
+    TxHash(Block<Txid>),
+    Hex(String),
 }
