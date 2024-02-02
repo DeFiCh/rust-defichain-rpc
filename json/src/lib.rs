@@ -24,6 +24,7 @@ extern crate serde_json;
 
 use std::collections::HashMap;
 
+pub mod account;
 pub mod blockchain;
 pub mod governance;
 pub mod mining;
