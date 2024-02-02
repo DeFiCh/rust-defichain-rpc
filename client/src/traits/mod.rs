@@ -1,4 +1,4 @@
-// mod account;
+mod account;
 mod blockchain;
 // mod evm;
 mod governance;
