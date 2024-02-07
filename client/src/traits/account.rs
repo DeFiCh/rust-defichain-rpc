@@ -1,5 +1,5 @@
-use crate::{into_json, Client, Result, RpcApi};
-use defichain_rpc_json::account::*;
+use crate::{into_json, obj_into_json, Client, Result, RpcApi};
+use defichain_rpc_json::{account::*, common::UTXO};
 
 pub trait AccountRPC: RpcApi {
     fn account_to_account(
@@ -17,13 +17,13 @@ pub trait AccountRPC: RpcApi {
     fn future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String>;
     fn get_account(
         &self,
-        owner: String,
+        owner: &str,
         pagination: Option<GetAccountPagination>,
         indexed_amounts: Option<bool>,
     ) -> Result<AccountAmount>;
     fn get_account_history(
         &self,
-        owner: String,
+        owner: &str,
         block_height: u64,
         txn: u64,
     ) -> Result<AccountHistory>;
@@ -93,18 +93,18 @@ impl AccountRPC for Client {
     }
     fn get_account(
         &self,
-        owner: String,
+        owner: &str,
         pagination: Option<GetAccountPagination>,
         indexed_amounts: Option<bool>,
     ) -> Result<AccountAmount> {
         self.call(
             "getaccount",
-            &[into_json(owner)?, into_json(pagination)?, into_json(indexed_amounts)?],
+            &[into_json(owner)?, obj_into_json(pagination)?, into_json(indexed_amounts)?],
         )
     }
     fn get_account_history(
         &self,
-        owner: String,
+        owner: &str,
         block_height: u64,
         txn: u64,
     ) -> Result<AccountHistory> {

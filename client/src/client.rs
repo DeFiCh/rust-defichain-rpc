@@ -19,8 +19,8 @@ use crate::{bitcoin, deserialize_hex};
 use bitcoin::hex::DisplayHex;
 use json::bitcoin::Txid;
 use jsonrpc;
-use serde;
-use serde_json;
+use serde::{self, Serialize};
+use serde_json::{self, Map};
 
 use crate::bitcoin::address::{NetworkChecked, NetworkUnchecked};
 use crate::bitcoin::hashes::hex::FromHex;
@@ -70,6 +70,17 @@ where
     T: serde::ser::Serialize,
 {
     Ok(serde_json::to_value(val)?)
+}
+
+/// Shorthand for converting a variable into a serde_json::Value.
+pub fn obj_into_json<T>(opt: Option<T>) -> Result<serde_json::Value>
+where
+    T: serde::ser::Serialize,
+{
+    match opt {
+        Some(val) => Ok(into_json(val)?),
+        None => Ok(serde_json::Value::Object(Map::new())),
+    }
 }
 
 /// Shorthand for converting an Option into an Option<serde_json::Value>.
