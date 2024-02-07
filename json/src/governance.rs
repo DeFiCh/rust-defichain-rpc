@@ -78,31 +78,6 @@ pub struct VOCData {
     emergency: Option<bool>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct UTXO {
-    txid: bitcoin::Txid,
-    vout: u64,
-}
-
-// {
-//     "proposalId": "084619ea20753624bcd1a630872068e8c08248fa8619bc286f43c037d1e02ce4",
-//     "creationHeight": 1260759,
-//     "title": "Test",
-//     "context": "https://www.reddit.com/r/defiblockchain/s/meOtuKqlL1",
-//     "contextHash": "",
-//     "status": "Rejected",
-//     "type": "VoteOfConfidence",
-//     "currentCycle": 1,
-//     "totalCycles": 1,
-//     "cycleEndHeight": 1264320,
-//     "proposalEndHeight": 1264320,
-//     "votingPeriod": 2880,
-//     "quorum": "1.00%",
-//     "approvalThreshold": "66.67%",
-//     "fee": 50
-//   }
-
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

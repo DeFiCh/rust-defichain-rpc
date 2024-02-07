@@ -7,15 +7,15 @@ use bitcoin::{BlockHash, Txid};
 pub struct SoftforkInfo {
     r#type: String,
     active: bool,
-    height: u32,
+    pub height: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BlockchainInfo {
     chain: String,
-    blocks: u64,
-    headers: u64,
+    pub blocks: u32,
+    headers: u32,
     bestblockhash: String,
     difficulty: u64,
     mediantime: u64,
@@ -24,7 +24,7 @@ pub struct BlockchainInfo {
     chainwork: String,
     size_on_disk: u64,
     pruned: bool,
-    softforks: HashMap<String, SoftforkInfo>,
+    pub softforks: HashMap<String, SoftforkInfo>,
     warnings: String,
 }
 

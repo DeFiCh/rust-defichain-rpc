@@ -26,9 +26,13 @@ use std::collections::HashMap;
 
 pub mod account;
 pub mod blockchain;
+pub mod common;
 pub mod governance;
+pub mod loan;
 pub mod mining;
+pub mod poolpair;
 pub mod token;
+pub mod vault;
 
 use bitcoin::address::NetworkUnchecked;
 use bitcoin::block::Version;

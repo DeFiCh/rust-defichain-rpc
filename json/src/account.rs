@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::common::UTXO;
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum OwnerType {
@@ -61,7 +63,7 @@ pub struct AccountOwner {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct AccountAmount(HashMap<String, i64>);
+pub struct AccountAmount(pub HashMap<String, f64>);
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -90,13 +92,6 @@ pub struct BalanceTransferPayload(HashMap<String, String>);
 #[serde(rename_all = "camelCase")]
 pub struct BalanceTransferAccountOptions {
     utxos: Option<Vec<UTXO>>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct UTXO {
-    txid: String,
-    vout: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -186,19 +181,21 @@ pub struct BurnHistory {
 #[serde(rename_all = "camelCase")]
 pub struct BurnInfo {
     address: String,
-    amount: i64,
-    tokens: Vec<String>,
+    pub amount: f64,
+    pub tokens: Vec<String>,
     consortiumtokens: Vec<String>,
-    feeburn: i64,
-    emissionburn: i64,
-    auctionburn: i64,
-    paybackburn: Vec<String>,
+    pub feeburn: f64,
+    pub emissionburn: f64,
+    pub auctionburn: f64,
+    pub paybackburn: Vec<String>,
     dexfeetokens: Vec<String>,
-    dfipaybackfee: i64,
+    dfipaybackfee: f64,
     dfipaybacktokens: Vec<String>,
     paybackfees: Vec<String>,
     paybacktokens: Vec<String>,
+    #[serde(rename = "dfip2203")]
     dfip_2203: Vec<String>,
+    #[serde(rename = "dfip2206f")]
     dfip_2206_f: Vec<String>,
 }
 

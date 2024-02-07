@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::common::UTXO;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TokenResult(pub HashMap<u32, TokenInfo>);
 
@@ -51,19 +53,12 @@ pub struct UpdateTokenMetadata {
     finalize: Option<bool>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenPagination {
-    start: u64,
-    including_start: bool,
-    limit: u64,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct UTXO {
-    txid: bitcoin::Txid,
-    vout: u64,
+    pub start: u64,
+    pub including_start: bool,
+    pub limit: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
