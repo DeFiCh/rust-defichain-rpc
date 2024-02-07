@@ -21,4 +21,5 @@ pub use account::AccountRPC;
 pub use blockchain::BlockchainRPC;
 pub use governance::GovernanceRPC;
 pub use loan::LoanRPC;
+pub use poolpair::PoolPairRPC;
 pub use token::TokenRPC;

@@ -1,97 +1,104 @@
 use crate::{into_json, obj_into_json, Client, Result, RpcApi};
+use async_trait::async_trait;
 use defichain_rpc_json::{account::*, common::UTXO};
 
+#[async_trait]
 pub trait AccountRPC: RpcApi {
-    fn account_to_account(
+    async fn account_to_account(
         &self,
         from: String,
         payload: BalanceTransferPayload,
         options: BalanceTransferAccountOptions,
     ) -> Result<String>;
-    fn account_to_utxos(
+    async fn account_to_utxos(
         &self,
         from: String,
         payload: BalanceTransferPayload,
         options: BalanceTransferAccountOptions,
     ) -> Result<String>;
-    fn future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String>;
-    fn get_account(
+    async fn future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String>;
+    async fn get_account(
         &self,
         owner: &str,
         pagination: Option<GetAccountPagination>,
         indexed_amounts: Option<bool>,
     ) -> Result<AccountAmount>;
-    fn get_account_history(
+    async fn get_account_history(
         &self,
         owner: &str,
         block_height: u64,
         txn: u64,
     ) -> Result<AccountHistory>;
-    fn get_burn_info(&self) -> Result<BurnInfo>;
-    fn get_pending_dusd_swaps(&self, address: String) -> Result<DusdSwapsInfo>;
-    fn get_pending_future_swaps(&self, address: String) -> Result<GetFutureInfo>;
-    fn get_token_balances(
+    async fn get_burn_info(&self) -> Result<BurnInfo>;
+    async fn get_pending_dusd_swaps(&self, address: String) -> Result<DusdSwapsInfo>;
+    async fn get_pending_future_swaps(&self, address: String) -> Result<GetFutureInfo>;
+    async fn get_token_balances(
         &self,
         pagination: Option<GetAccountPagination>,
         indexed_amounts: Option<bool>,
         options: Option<GetTokenBalancesOptions>,
     ) -> Result<()>;
-    fn history_count(
+    async fn history_count(
         &self,
         owner: Option<String>,
         options: AccountHistoryCountOptions,
     ) -> Result<u64>;
-    fn list_account_history(
+    async fn list_account_history(
         &self,
         owner: Option<String>,
         options: AccountHistoryOptions,
     ) -> Result<Vec<AccountHistory>>;
     // TODO handle AccountResult enum type
-    // fn list_accounts(
+    // async fn list_accounts(
     //     &self,
     //     pagination: Option<ListAccountPagination>,
     //     verbose: Option<bool>,
     //     options: Option<ListAccountOptions>,
     // ) -> Result<Vec<AccountResult<String, String>>>;
-    fn list_burn_history(&self, options: BurnHistoryOptions) -> Result<Vec<BurnHistory>>;
-    fn list_community_balances(&self) -> Result<CommunityBalanceData>;
-    fn list_pending_dusd_swaps(&self) -> Result<Vec<DusdSwapsInfo>>;
-    fn list_pending_future_swaps(&self) -> Result<Vec<ListFutureInfo>>;
-    fn send_tokens_to_address(
+    async fn list_burn_history(&self, options: BurnHistoryOptions) -> Result<Vec<BurnHistory>>;
+    async fn list_community_balances(&self) -> Result<CommunityBalanceData>;
+    async fn list_pending_dusd_swaps(&self) -> Result<Vec<DusdSwapsInfo>>;
+    async fn list_pending_future_swaps(&self) -> Result<Vec<ListFutureInfo>>;
+    async fn send_tokens_to_address(
         &self,
         from: AddressBalances,
         to: AddressBalances,
         options: SendTokensOptions,
     ) -> Result<String>;
-    fn transfer_domain(&self, payload: Vec<TransferDomain>) -> Result<String>;
-    fn utxos_to_account(
+    async fn transfer_domain(&self, payload: Vec<TransferDomain>) -> Result<String>;
+    async fn utxos_to_account(
         &self,
         payload: BalanceTransferPayload,
         utxos: Option<UTXO>,
     ) -> Result<String>;
-    fn withdraw_future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String>;
+    async fn withdraw_future_swap(&self, future: FutureSwap, utxos: Option<UTXO>)
+        -> Result<String>;
 }
+
+#[async_trait]
 impl AccountRPC for Client {
-    fn account_to_account(
+    async fn account_to_account(
         &self,
         from: String,
         payload: BalanceTransferPayload,
         options: BalanceTransferAccountOptions,
     ) -> Result<String> {
         self.call("accounttoaccount", &[into_json(from)?, into_json(payload)?, into_json(options)?])
+            .await
     }
-    fn account_to_utxos(
+    async fn account_to_utxos(
         &self,
         from: String,
         payload: BalanceTransferPayload,
         options: BalanceTransferAccountOptions,
     ) -> Result<String> {
         self.call("accounttoutxos", &[into_json(from)?, into_json(payload)?, into_json(options)?])
+            .await
     }
-    fn future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String> {
-        self.call("futureswap", &[into_json(future)?, into_json(utxos)?])
+    async fn future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String> {
+        self.call("futureswap", &[into_json(future)?, into_json(utxos)?]).await
     }
-    fn get_account(
+    async fn get_account(
         &self,
         owner: &str,
         pagination: Option<GetAccountPagination>,
@@ -101,8 +108,9 @@ impl AccountRPC for Client {
             "getaccount",
             &[into_json(owner)?, obj_into_json(pagination)?, into_json(indexed_amounts)?],
         )
+        .await
     }
-    fn get_account_history(
+    async fn get_account_history(
         &self,
         owner: &str,
         block_height: u64,
@@ -112,17 +120,18 @@ impl AccountRPC for Client {
             "getaccounthistory",
             &[into_json(owner)?, into_json(block_height)?, into_json(txn)?],
         )
+        .await
     }
-    fn get_burn_info(&self) -> Result<BurnInfo> {
-        self.call("getburninfo", &[])
+    async fn get_burn_info(&self) -> Result<BurnInfo> {
+        self.call("getburninfo", &[]).await
     }
-    fn get_pending_dusd_swaps(&self, address: String) -> Result<DusdSwapsInfo> {
-        self.call("getpendingdusdswaps", &[into_json(address)?])
+    async fn get_pending_dusd_swaps(&self, address: String) -> Result<DusdSwapsInfo> {
+        self.call("getpendingdusdswaps", &[into_json(address)?]).await
     }
-    fn get_pending_future_swaps(&self, address: String) -> Result<GetFutureInfo> {
-        self.call("getpendingfutureswaps", &[into_json(address)?])
+    async fn get_pending_future_swaps(&self, address: String) -> Result<GetFutureInfo> {
+        self.call("getpendingfutureswaps", &[into_json(address)?]).await
     }
-    fn get_token_balances(
+    async fn get_token_balances(
         &self,
         pagination: Option<GetAccountPagination>,
         indexed_amounts: Option<bool>,
@@ -132,22 +141,23 @@ impl AccountRPC for Client {
             "gettokenbalances",
             &[into_json(pagination)?, into_json(indexed_amounts)?, into_json(options)?],
         )
+        .await
     }
-    fn history_count(
+    async fn history_count(
         &self,
         owner: Option<String>,
         options: AccountHistoryCountOptions,
     ) -> Result<u64> {
-        self.call("historycount", &[into_json(owner)?, into_json(options)?])
+        self.call("historycount", &[into_json(owner)?, into_json(options)?]).await
     }
-    fn list_account_history(
+    async fn list_account_history(
         &self,
         owner: Option<String>,
         options: AccountHistoryOptions,
     ) -> Result<Vec<AccountHistory>> {
-        self.call("listaccounthistory", &[into_json(owner)?, into_json(options)?])
+        self.call("listaccounthistory", &[into_json(owner)?, into_json(options)?]).await
     }
-    // fn list_accounts(
+    // async fn list_accounts(
     //     &self,
     //     pagination: Option<ListAccountPagination>,
     //     verbose: Option<bool>,
@@ -158,37 +168,42 @@ impl AccountRPC for Client {
     //         &[into_json(pagination)?, into_json(verbose)?, into_json(options)?],
     //     )
     // }
-    fn list_burn_history(&self, options: BurnHistoryOptions) -> Result<Vec<BurnHistory>> {
-        self.call("listburnhistory", &[into_json(options)?])
+    async fn list_burn_history(&self, options: BurnHistoryOptions) -> Result<Vec<BurnHistory>> {
+        self.call("listburnhistory", &[into_json(options)?]).await
     }
-    fn list_community_balances(&self) -> Result<CommunityBalanceData> {
-        self.call("listcommunitybalances", &[])
+    async fn list_community_balances(&self) -> Result<CommunityBalanceData> {
+        self.call("listcommunitybalances", &[]).await
     }
-    fn list_pending_dusd_swaps(&self) -> Result<Vec<DusdSwapsInfo>> {
-        self.call("listpendingdusdswaps", &[])
+    async fn list_pending_dusd_swaps(&self) -> Result<Vec<DusdSwapsInfo>> {
+        self.call("listpendingdusdswaps", &[]).await
     }
-    fn list_pending_future_swaps(&self) -> Result<Vec<ListFutureInfo>> {
-        self.call("listpendingfutureswaps", &[])
+    async fn list_pending_future_swaps(&self) -> Result<Vec<ListFutureInfo>> {
+        self.call("listpendingfutureswaps", &[]).await
     }
-    fn send_tokens_to_address(
+    async fn send_tokens_to_address(
         &self,
         from: AddressBalances,
         to: AddressBalances,
         options: SendTokensOptions,
     ) -> Result<String> {
         self.call("sendtokenstoaddress", &[into_json(from)?, into_json(to)?, into_json(options)?])
+            .await
     }
-    fn transfer_domain(&self, payload: Vec<TransferDomain>) -> Result<String> {
-        self.call("transferdomain", &[into_json(payload)?])
+    async fn transfer_domain(&self, payload: Vec<TransferDomain>) -> Result<String> {
+        self.call("transferdomain", &[into_json(payload)?]).await
     }
-    fn utxos_to_account(
+    async fn utxos_to_account(
         &self,
         payload: BalanceTransferPayload,
         utxos: Option<UTXO>,
     ) -> Result<String> {
-        self.call("utxostoaccount", &[into_json(payload)?, into_json(utxos)?])
+        self.call("utxostoaccount", &[into_json(payload)?, into_json(utxos)?]).await
     }
-    fn withdraw_future_swap(&self, future: FutureSwap, utxos: Option<UTXO>) -> Result<String> {
-        self.call("withdrawfutureswap", &[into_json(future)?, into_json(utxos)?])
+    async fn withdraw_future_swap(
+        &self,
+        future: FutureSwap,
+        utxos: Option<UTXO>,
+    ) -> Result<String> {
+        self.call("withdrawfutureswap", &[into_json(future)?, into_json(utxos)?]).await
     }
 }

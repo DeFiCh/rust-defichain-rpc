@@ -81,9 +81,9 @@ pub struct PoolShareInfo {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PoolPairPagination {
-    start: u64,
-    including_start: bool,
-    limit: u64,
+    pub start: u64,
+    pub including_start: bool,
+    pub limit: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

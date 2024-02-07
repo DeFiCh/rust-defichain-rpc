@@ -22,7 +22,8 @@ path = "src/lib.rs"
 defichain-rpc-json = { version = "0.18.0", path = "../json" }
 
 log = "0.4.5"
-jsonrpc = "0.14.0"
+jsonrpc-async = "2.0.2"
+async-trait = "0.1.42"
 
 # Used for deserialization of JSON.
 serde = "1"

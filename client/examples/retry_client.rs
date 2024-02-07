@@ -9,7 +9,7 @@
 //
 
 extern crate defichain_rpc;
-extern crate jsonrpc;
+extern crate jsonrpc_async;
 extern crate serde;
 extern crate serde_json;
 
