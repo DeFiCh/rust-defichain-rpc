@@ -1377,7 +1377,7 @@ impl RpcApi for Client {
     }
 }
 
-async fn log_response(cmd: &str, resp: &Result<jsonrpc_async::Response>) {
+fn log_response(cmd: &str, resp: &Result<jsonrpc_async::Response>) {
     if log_enabled!(Warn) || log_enabled!(Debug) || log_enabled!(Trace) {
         match resp {
             Err(ref e) => {
