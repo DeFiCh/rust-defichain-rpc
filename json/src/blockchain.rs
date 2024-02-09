@@ -158,7 +158,8 @@ pub struct TxOutSetInfo {
 #[serde(rename_all = "camelCase")]
 pub struct ScriptPubKey {
     pub asm: String,
-    pub hex: String,
+    #[serde(with = "crate::serde_hex")]
+    pub hex: Vec<u8>,
     pub r#type: String,
     req_sigs: Option<u64>,
     pub addresses: Option<Vec<String>>,
