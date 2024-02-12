@@ -32,7 +32,7 @@ pub struct LoanSchemeResult {
     #[serde(rename(serialize = "minColRatio"))]
     mincolratio: i64,
     #[serde(rename(serialize = "interestRate"))]
-    interestrate: i64,
+    interestrate: f64,
     default: bool,
 }
 
