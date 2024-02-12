@@ -27,10 +27,11 @@ pub struct DestroyLoanScheme {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub struct LoanSchemeResult {
-    id: String,
+    pub id: String,
+    #[serde(rename(serialize = "minColRatio"))]
     mincolratio: i64,
+    #[serde(rename(serialize = "interestRate"))]
     interestrate: i64,
     default: bool,
 }
@@ -42,15 +43,6 @@ pub struct SetCollateralToken {
     factor: i64,
     fixed_interval_price_id: String,
     activate_after_block: Option<u64>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct GetLoanSchemeResult {
-    id: String,
-    interestrate: i64,
-    mincolratio: i64,
-    default: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
