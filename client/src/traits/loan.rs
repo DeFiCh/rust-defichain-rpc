@@ -18,7 +18,7 @@ pub trait LoanRPC: RpcApi {
     async fn get_collateral_token(&self, token: String) -> Result<CollateralTokenDetail>;
     async fn get_interest(&self, id: String, token: Option<String>) -> Result<Vec<Interest>>;
     async fn get_loan_info(&self) -> Result<GetLoanInfoResult>;
-    async fn get_loan_scheme(&self, id: String) -> Result<GetLoanSchemeResult>;
+    async fn get_loan_scheme(&self, id: String) -> Result<LoanSchemeResult>;
     async fn get_loan_token(&self, token: String) -> Result<LoanTokenResult>;
     async fn list_collateral_tokens(&self) -> Result<Vec<CollateralTokenDetail>>;
     async fn list_loan_schemes(&self) -> Result<Vec<LoanSchemeResult>>;
@@ -72,7 +72,7 @@ impl LoanRPC for Client {
     async fn get_loan_info(&self) -> Result<GetLoanInfoResult> {
         self.call("getloaninfo", &[]).await
     }
-    async fn get_loan_scheme(&self, id: String) -> Result<GetLoanSchemeResult> {
+    async fn get_loan_scheme(&self, id: String) -> Result<LoanSchemeResult> {
         self.call("getloanscheme", &[into_json(id)?]).await
     }
     async fn get_loan_token(&self, token: String) -> Result<LoanTokenResult> {
