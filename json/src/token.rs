@@ -3,9 +3,9 @@ use std::collections::HashMap;
 use crate::common::UTXO;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct TokenResult(pub HashMap<u32, TokenInfo>);
+pub struct TokenResult(pub HashMap<String, TokenInfo>);
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TokenInfo {
     pub symbol: String,

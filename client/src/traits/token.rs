@@ -18,7 +18,7 @@ pub trait TokenRPC: RpcApi {
     ) -> Result<String>;
     async fn decode_custom_tx(&self, hexstring: String, iswitness: Option<bool>) -> Result<()>;
     async fn get_custom_tx(&self, txid: String, blockhash: Option<String>) -> Result<()>;
-    async fn get_token(&self, symbol_key: String) -> Result<TokenResult>;
+    async fn get_token(&self, symbol_key: &str) -> Result<TokenResult>;
     async fn list_tokens(
         &self,
         pagination: Option<TokenPagination>,
@@ -60,7 +60,7 @@ impl TokenRPC for Client {
     async fn get_custom_tx(&self, txid: String, blockhash: Option<String>) -> Result<()> {
         self.call("getcustomtx", &[into_json(txid)?, into_json(blockhash)?]).await
     }
-    async fn get_token(&self, symbol_key: String) -> Result<TokenResult> {
+    async fn get_token(&self, symbol_key: &str) -> Result<TokenResult> {
         self.call("gettoken", &[into_json(symbol_key)?]).await
     }
     async fn list_tokens(
