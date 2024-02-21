@@ -183,7 +183,6 @@ pub struct BurnInfo {
     address: String,
     pub amount: f64,
     pub tokens: Vec<String>,
-    consortiumtokens: Vec<String>,
     pub feeburn: f64,
     pub emissionburn: f64,
     pub auctionburn: f64,
