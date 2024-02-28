@@ -33,6 +33,12 @@ pub struct UTXO {
 pub struct PoolPairsResult(pub HashMap<String, PoolPairInfo>);
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum StringOrF64 {
+    Str(String),
+    Float(f64),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PoolPairInfo {
     pub symbol: String,
@@ -51,9 +57,9 @@ pub struct PoolPairInfo {
     pub commission: f64,
     pub total_liquidity: f64,
     #[serde(rename = "reserveA/reserveB")]
-    pub reserve_a_reserve_b: f64,
+    pub reserve_a_reserve_b: StringOrF64,
     #[serde(rename = "reserveB/reserveA")]
-    pub reserve_b_reserve_a: f64,
+    pub reserve_b_reserve_a: StringOrF64,
     pub trade_enabled: bool,
     pub owner_address: String,
     pub block_commission_a: f64,
