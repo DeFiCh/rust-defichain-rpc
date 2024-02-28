@@ -30,7 +30,7 @@ pub struct UTXO {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct PoolPairsResult(HashMap<String, PoolPairInfo>);
+pub struct PoolPairsResult(pub HashMap<String, PoolPairInfo>);
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
