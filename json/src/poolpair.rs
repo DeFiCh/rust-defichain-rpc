@@ -53,9 +53,9 @@ pub struct PoolPairInfo {
     pub commission: f64,
     pub total_liquidity: f64,
     #[serde(rename = "reserveA/reserveB")]
-    pub reserve_a_reserve_b: String,
+    pub reserve_a_reserve_b: f64,
     #[serde(rename = "reserveB/reserveA")]
-    pub reserve_b_reserve_a: String,
+    pub reserve_b_reserve_a: f64,
     pub trade_enabled: bool,
     pub owner_address: String,
     pub block_commission_a: f64,
