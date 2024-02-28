@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use serde_with::skip_serializing_none;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -38,6 +39,7 @@ pub enum StringOrF64 {
     Float(f64),
 }
 
+#[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PoolPairInfo {
