@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use serde_with::skip_serializing_none;
+use serde::{Deserialize, Deserializer};
+use serde_json::Value;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -30,6 +32,14 @@ pub struct UTXO {
     vout: u64,
 }
 
+fn to_string_if_num<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::Result<String, D::Error> {
+    Ok(match Value::deserialize(deserializer)? {
+        Value::String(s) => s,
+        Value::Number(num) => num.to_string(),
+        _ => return Err(serde::de::Error::custom("Error parsing"))
+    })
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PoolPairsResult(pub HashMap<String, PoolPairInfo>);
 
@@ -52,10 +62,12 @@ pub struct PoolPairInfo {
     pub reserve_b: f64,
     pub commission: f64,
     pub total_liquidity: f64,
+    #[serde(deserialize_with = "to_string_if_num")]
     #[serde(rename = "reserveA/reserveB")]
-    pub reserve_a_reserve_b: f64,
+    pub reserve_a_reserve_b: String,
+    #[serde(deserialize_with = "to_string_if_num")]
     #[serde(rename = "reserveB/reserveA")]
-    pub reserve_b_reserve_a: f64,
+    pub reserve_b_reserve_a: String,
     pub trade_enabled: bool,
     pub owner_address: String,
     pub block_commission_a: f64,
