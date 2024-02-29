@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeMap};
 use serde_with::skip_serializing_none;
 use serde::{Deserialize, Deserializer};
 use serde_json::Value;
@@ -41,7 +41,7 @@ fn to_string_if_num<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct PoolPairsResult(pub HashMap<String, PoolPairInfo>);
+pub struct PoolPairsResult(pub BTreeMap<String, PoolPairInfo>);
 
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize)]
