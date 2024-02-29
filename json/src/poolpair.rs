@@ -76,7 +76,7 @@ pub struct PoolPairInfo {
     pub reward_loan_pct: f64,
     pub custom_rewards: Option<Vec<String>>,
     pub creation_tx: String,
-    pub creation_height: f64,
+    pub creation_height: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
