@@ -32,10 +32,16 @@ pub struct UTXO {
     vout: u64,
 }
 
-fn to_string_if_num<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::Result<String, D::Error> {
+#[derive(Debug, Serialize, Deserialize)]
+pub enum StringOrFloat {
+    Str(String),
+    Float(f64),
+}
+
+fn string_or_float<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::Result<StringOrFloat, D::Error> {
     Ok(match Value::deserialize(deserializer)? {
-        Value::String(s) => s,
-        Value::Number(num) => num.to_string(),
+        Value::String(s) => StringOrFloat::Str(s),
+        Value::Number(num) => StringOrFloat::Float(num.as_f64().unwrap_or_default()),
         _ => return Err(serde::de::Error::custom("Error parsing"))
     })
 }
@@ -62,12 +68,12 @@ pub struct PoolPairInfo {
     pub reserve_b: f64,
     pub commission: f64,
     pub total_liquidity: f64,
-    #[serde(deserialize_with = "to_string_if_num")]
+    #[serde(deserialize_with = "string_or_float")]
     #[serde(rename = "reserveA/reserveB")]
-    pub reserve_a_reserve_b: String,
-    #[serde(deserialize_with = "to_string_if_num")]
+    pub reserve_a_reserve_b: StringOrFloat,
+    #[serde(deserialize_with = "string_or_float")]
     #[serde(rename = "reserveB/reserveA")]
-    pub reserve_b_reserve_a: String,
+    pub reserve_b_reserve_a: StringOrFloat,
     pub trade_enabled: bool,
     pub owner_address: String,
     pub block_commission_a: f64,
