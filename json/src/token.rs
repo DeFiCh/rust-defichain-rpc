@@ -1,9 +1,9 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::common::UTXO;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct TokenResult(pub HashMap<String, TokenInfo>);
+pub struct TokenResult(pub BTreeMap<String, TokenInfo>);
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
