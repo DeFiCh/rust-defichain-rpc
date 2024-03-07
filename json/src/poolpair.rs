@@ -43,11 +43,11 @@ fn to_number<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::Result<
     })
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct PoolPairsResult(pub BTreeMap<String, PoolPairInfo>);
 
 #[skip_serializing_none]
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[serde(rename_all = "camelCase")]
 pub struct PoolPairInfo {
     pub symbol: String,
