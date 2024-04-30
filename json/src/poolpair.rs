@@ -1,7 +1,7 @@
-use std::collections::{HashMap, BTreeMap};
-use serde_with::skip_serializing_none;
 use serde::{Deserialize, Deserializer};
 use serde_json::Value;
+use serde_with::skip_serializing_none;
+use std::collections::{BTreeMap, HashMap};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -36,7 +36,7 @@ fn to_float<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::Result<f
     Ok(match Value::deserialize(deserializer)? {
         Value::String(s) => s.parse::<f64>().ok().unwrap(),
         Value::Number(num) => num.as_f64().unwrap_or_default(),
-        _ => return Err(serde::de::Error::custom("Error parsing"))
+        _ => return Err(serde::de::Error::custom("Error parsing")),
     })
 }
 
@@ -44,7 +44,7 @@ fn to_float<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::Result<f
 pub struct PoolPairsResult(pub BTreeMap<String, PoolPairInfo>);
 
 #[skip_serializing_none]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PoolPairInfo {
     pub symbol: String,
