@@ -1,5 +1,7 @@
+use std::collections::HashMap;
+
 use async_trait::async_trait;
-use defichain_rpc_json::common::UTXO;
+// use defichain_rpc_json::common::UTXO;
 
 use crate::{into_json, Client, Result, RpcApi};
 
@@ -13,7 +15,7 @@ pub trait MasternodeRPC: RpcApi {
     // ) -> Result<String>;
     // fn get_active_masternode_count(&self) -> Result<u64>;
     // fn get_anchor_teams(&self, block_height: Option<u64>) -> Result<AnchorTeamResult>;
-    async fn get_gov(&self, name: String) -> Result<String>;
+    async fn get_gov(&self, name: String) -> Result<HashMap<String, serde_json::Value>>;
     // fn get_masternode(&self, masternode_id: String) -> Result<MasternodeResult>;
     // fn get_masternode_blocks(
     //     &self,
@@ -51,7 +53,7 @@ pub trait MasternodeRPC: RpcApi {
 
 #[async_trait]
 impl MasternodeRPC for Client {
-    async fn get_gov(&self, id: String) -> Result<String> {
+    async fn get_gov(&self, id: String) -> Result<HashMap<String, serde_json::Value>> {
         self.call("getgov", &[into_json(id)?]).await
     }
 }
