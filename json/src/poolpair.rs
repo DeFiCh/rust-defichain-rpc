@@ -40,7 +40,7 @@ fn to_float<'de, D: Deserializer<'de>>(deserializer: D) -> std::result::Result<f
     })
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PoolPairsResult(pub BTreeMap<String, PoolPairInfo>);
 
 #[skip_serializing_none]
