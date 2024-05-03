@@ -1,13 +1,15 @@
 use std::collections::HashMap;
 
 use bitcoin::{BlockHash, Txid};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SoftforkInfo {
     r#type: String,
     active: bool,
-    pub height: u32,
+    pub height: Option<u32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -22,6 +24,7 @@ pub struct BlockchainInfo {
     verificationprogress: u64,
     initialblockdownload: bool,
     chainwork: String,
+    #[serde(rename = "size_on_disk")]
     size_on_disk: u64,
     pruned: bool,
     pub softforks: HashMap<String, SoftforkInfo>,
