@@ -17,7 +17,7 @@ pub struct BlockchainInfo {
     pub blocks: u32,
     headers: u32,
     bestblockhash: String,
-    difficulty: u64,
+    difficulty: f64,
     mediantime: u64,
     verificationprogress: u64,
     initialblockdownload: bool,
