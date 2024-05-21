@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use crate::common::UTXO;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct TokenResult(pub BTreeMap<String, TokenInfo>);
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
