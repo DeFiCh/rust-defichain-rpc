@@ -57,6 +57,7 @@ pub struct UpdateTokenMetadata {
 #[serde(rename_all = "camelCase")]
 pub struct TokenPagination {
     pub start: u64,
+    #[serde(rename = "including_start")]
     pub including_start: bool,
     pub limit: u64,
 }

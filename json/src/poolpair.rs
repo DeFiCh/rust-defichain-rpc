@@ -96,6 +96,7 @@ pub struct PoolShareInfo {
 #[serde(rename_all = "camelCase")]
 pub struct PoolPairPagination {
     pub start: u64,
+    #[serde(rename = "including_start")]
     pub including_start: bool,
     pub limit: u64,
 }
