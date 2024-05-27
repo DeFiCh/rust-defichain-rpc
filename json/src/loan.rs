@@ -31,7 +31,7 @@ pub struct LoanSchemeResult {
     pub id: String,
     pub mincolratio: i64,
     pub interestrate: f64,
-    default: bool,
+    default: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
