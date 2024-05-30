@@ -21,7 +21,7 @@ pub struct BlockchainInfo {
     bestblockhash: String,
     difficulty: f64,
     mediantime: u64,
-    verificationprogress: u64,
+    verificationprogress: f64,
     initialblockdownload: bool,
     chainwork: String,
     #[serde(rename = "size_on_disk")]
