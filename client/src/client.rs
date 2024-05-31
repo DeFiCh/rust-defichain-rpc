@@ -15,21 +15,20 @@ use std::iter::FromIterator;
 use std::path::PathBuf;
 use std::{fmt, result};
 
-use crate::{bitcoin, deserialize_hex};
-use async_trait::async_trait;
-use bitcoin::hex::DisplayHex;
-use json::bitcoin::Txid;
-use jsonrpc_async;
-use serde::{self, Serialize};
-use serde_json::{self, Map};
-
 use crate::bitcoin::address::{NetworkChecked, NetworkUnchecked};
 use crate::bitcoin::hashes::hex::FromHex;
 use crate::bitcoin::secp256k1::ecdsa::Signature;
 use crate::bitcoin::{
     Address, Amount, Block, OutPoint, PrivateKey, PublicKey, Script, Transaction,
 };
+use crate::{bitcoin, deserialize_hex};
+use async_trait::async_trait;
+use bitcoin::hex::DisplayHex;
+use json::bitcoin::Txid;
+use jsonrpc_async;
 use log::Level::{Debug, Trace, Warn};
+use serde::{self, Serialize};
+use serde_json::{self, json, Map};
 
 use crate::error::*;
 use crate::json;
@@ -889,10 +888,12 @@ pub trait RpcApi: Sized {
     async fn test_mempool_accept<R: RawTx + Send + Sync>(
         &self,
         rawtxs: &[R],
+        max_fee_rate: Option<u64>,
     ) -> Result<Vec<json::TestMempoolAcceptResult>> {
         let hexes: Vec<serde_json::Value> =
             rawtxs.to_vec().into_iter().map(|r| r.raw_hex().into()).collect();
-        self.call("testmempoolaccept", &[hexes.into()]).await
+        let mut args = [into_json(hexes)?, opt_into_json(max_fee_rate)?];
+        self.call("testmempoolaccept", &args).await
     }
 
     async fn stop(&self) -> Result<String> {
@@ -1115,8 +1116,13 @@ pub trait RpcApi: Sized {
         self.call("ping", &[]).await
     }
 
-    async fn send_raw_transaction<R: RawTx>(&self, tx: R) -> Result<bitcoin::Txid> {
-        self.call("sendrawtransaction", &[tx.raw_hex().into()]).await
+    async fn send_raw_transaction<R: RawTx>(
+        &self,
+        tx: R,
+        max_fee_rate: Option<u64>,
+    ) -> Result<bitcoin::Txid> {
+        let mut args = [into_json(tx.raw_hex())?, opt_into_json(max_fee_rate)?];
+        self.call("sendrawtransaction", &args).await
     }
 
     async fn estimate_smart_fee(
@@ -1409,17 +1415,22 @@ mod tests {
     use super::*;
     use crate::bitcoin;
     use serde_json;
-
     #[tokio::test]
     async fn test_raw_tx() {
         use crate::bitcoin::consensus::encode;
         let client = Client::new("http://localhost/".into(), Auth::None).await.unwrap();
         let tx: bitcoin::Transaction = encode::deserialize(&Vec::<u8>::from_hex("0200000001586bd02815cf5faabfec986a4e50d25dbee089bd2758621e61c5fab06c334af0000000006b483045022100e85425f6d7c589972ee061413bcf08dc8c8e589ce37b217535a42af924f0e4d602205c9ba9cb14ef15513c9d946fa1c4b797883e748e8c32171bdf6166583946e35c012103dae30a4d7870cd87b45dd53e6012f71318fdd059c1c2623b8cc73f8af287bb2dfeffffff021dc4260c010000001976a914f602e88b2b5901d8aab15ebe4a97cf92ec6e03b388ac00e1f505000000001976a914687ffeffe8cf4e4c038da46a9b1d37db385a472d88acfd211500").unwrap()).unwrap();
-
-        assert!(client.send_raw_transaction(&tx).await.is_err());
-        assert!(client.send_raw_transaction(&encode::serialize(&tx)).await.is_err());
-        assert!(client.send_raw_transaction("deadbeef").await.is_err());
-        assert!(client.send_raw_transaction("deadbeef".to_owned()).await.is_err());
+        let FEE: Amount = Amount::from_btc(0.001).unwrap();
+        assert!(client.send_raw_transaction(&tx, Some(FEE.to_sat())).await.is_err());
+        assert!(client
+            .send_raw_transaction(&encode::serialize(&tx), Some(FEE.to_sat()))
+            .await
+            .is_err());
+        assert!(client.send_raw_transaction("deadbeef", Some(FEE.to_sat())).await.is_err());
+        assert!(client
+            .send_raw_transaction("deadbeef".to_owned(), Some(FEE.to_sat()))
+            .await
+            .is_err());
     }
 
     async fn test_handle_defaults_inner() -> Result<()> {
