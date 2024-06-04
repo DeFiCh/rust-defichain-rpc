@@ -16,13 +16,9 @@ extern crate lazy_static;
 use std::collections::HashMap;
 use std::str::FromStr;
 
+use crate::json::BlockStatsFields as BsFields;
 use bitcoin::absolute::LockTime;
 use bitcoin::address::{NetworkChecked, NetworkUnchecked};
-use defichain_rpc::json;
-use defichain_rpc::jsonrpc_async::error::Error as JsonRpcError;
-use defichain_rpc::{Auth, Client, Error, RpcApi};
-
-use crate::json::BlockStatsFields as BsFields;
 use bitcoin::consensus::encode::{deserialize, serialize_hex};
 use bitcoin::hashes::hex::FromHex;
 use bitcoin::hashes::Hash;
@@ -34,6 +30,9 @@ use bitcoin::{
 use defichain_rpc::defichain_rpc_json::{
     GetBlockTemplateModes, GetBlockTemplateRules, ScanTxOutRequest,
 };
+use defichain_rpc::json;
+use defichain_rpc::jsonrpc_async::error::Error as JsonRpcError;
+use defichain_rpc::{Auth, Client, Error, RpcApi};
 
 lazy_static! {
     static ref SECP: secp256k1::Secp256k1<secp256k1::All> = secp256k1::Secp256k1::new();
@@ -134,7 +133,6 @@ async fn new_wallet_client(wallet_name: &str) -> Client {
 #[tokio::main]
 async fn main() {
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::max())).unwrap();
-
     let cl = new_wallet_client("testwallet").await;
 
     test_get_network_info(&cl).await;
@@ -673,7 +671,8 @@ async fn test_sign_raw_transaction_with_send_raw_transaction(cl: &Client) {
     };
     let res = cl.sign_raw_transaction_with_wallet(&tx, Some(&[input]), None).await.unwrap();
     assert!(res.complete);
-    let txid = cl.send_raw_transaction(&res.transaction().unwrap()).await.unwrap();
+    let txid =
+        cl.send_raw_transaction(&res.transaction().unwrap(), Some(FEE.to_sat())).await.unwrap();
 
     let tx = Transaction {
         version: transaction::Version::ONE,
@@ -703,7 +702,7 @@ async fn test_sign_raw_transaction_with_send_raw_transaction(cl: &Client) {
         .await
         .unwrap();
     assert!(res.complete);
-    let _ = cl.send_raw_transaction(&res.transaction().unwrap()).await.unwrap();
+    let _ = cl.send_raw_transaction(&res.transaction().unwrap(), Some(FEE.to_sat())).await.unwrap();
 }
 
 async fn test_invalidate_block_reconsider_block(cl: &Client) {
@@ -835,12 +834,12 @@ async fn test_test_mempool_accept(cl: &Client) {
         .create_raw_transaction(&[input.clone()], &output, Some(500_000), Some(false))
         .await
         .unwrap();
-    let res = cl.test_mempool_accept(&[&tx]).await.unwrap();
+    let res = cl.test_mempool_accept(&[&tx], Some(FEE.to_sat())).await.unwrap();
     assert!(!res[0].allowed);
     assert!(res[0].reject_reason.is_some());
     let signed =
         cl.sign_raw_transaction_with_wallet(&tx, None, None).await.unwrap().transaction().unwrap();
-    let res = cl.test_mempool_accept(&[&signed]).await.unwrap();
+    let res = cl.test_mempool_accept(&[&signed], Some(FEE.to_sat())).await.unwrap();
     assert!(res[0].allowed, "not allowed: {:?}", res[0].reject_reason);
 }
 
