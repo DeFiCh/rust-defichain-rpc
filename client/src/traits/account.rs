@@ -113,7 +113,7 @@ impl AccountRPC for Client {
     async fn get_account_history(
         &self,
         owner: &str,
-        block_height: u64,
+        block_height: u32,
         txn: u32,
     ) -> Result<AccountHistory> {
         self.call(
