@@ -97,14 +97,14 @@ pub struct BalanceTransferAccountOptions {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AccountHistory {
-    owner: String,
+    pub owner: String,
     block_height: u64,
     block_hash: Option<String>,
     block_time: Option<u64>,
     r#type: String,
     txn: u64,
     txid: String,
-    amounts: Vec<String>,
+    pub amounts: Vec<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
