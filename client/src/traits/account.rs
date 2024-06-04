@@ -26,7 +26,7 @@ pub trait AccountRPC: RpcApi {
     async fn get_account_history(
         &self,
         owner: &str,
-        block_height: u64,
+        block_height: u32,
         txn: u32,
     ) -> Result<AccountHistory>;
     async fn get_burn_info(&self) -> Result<BurnInfo>;
