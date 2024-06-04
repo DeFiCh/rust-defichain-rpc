@@ -27,7 +27,7 @@ pub trait AccountRPC: RpcApi {
         &self,
         owner: &str,
         block_height: u64,
-        txn: u64,
+        txn: u32,
     ) -> Result<AccountHistory>;
     async fn get_burn_info(&self) -> Result<BurnInfo>;
     async fn get_pending_dusd_swaps(&self, address: String) -> Result<DusdSwapsInfo>;
@@ -114,7 +114,7 @@ impl AccountRPC for Client {
         &self,
         owner: &str,
         block_height: u64,
-        txn: u64,
+        txn: u32,
     ) -> Result<AccountHistory> {
         self.call(
             "getaccounthistory",
