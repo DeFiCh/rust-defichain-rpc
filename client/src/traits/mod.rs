@@ -14,7 +14,7 @@ mod poolpair;
 // mod server;
 // mod spv;
 mod token;
-// mod vault;
+mod vault;
 // mod wallet;
 
 pub use account::AccountRPC;
