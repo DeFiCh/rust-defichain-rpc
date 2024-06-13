@@ -1,3 +1,6 @@
+use crate::{Result, RpcApi};
+use defichain_rpc_json::{common::UTXO, vault::*};
+
 pub trait VaultRPC: RpcApi {
     fn close_vault(&self, close_vault: CloseVault, utxos: Option<UTXO>) -> Result<String>;
     fn create_vault(&self, vault: CreateVault, utxos: Option<UTXO>) -> Result<String>;
@@ -16,7 +19,7 @@ pub trait VaultRPC: RpcApi {
         pagination: Option<ListAuctionHistoryPagination>,
     ) -> Result<Vec<ListAuctionHistoryDetail>>;
     fn list_auctions(&self) -> Result<Vec<VaultLiquidation>>;
-    fn list_vaults(&self) -> Result<Array>;
+    fn list_vaults(&self) -> Result<VaultActive>;
     fn place_auction_bid(
         &self,
         place_auction_bid: PlaceAuctionBid,
