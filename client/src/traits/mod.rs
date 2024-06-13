@@ -24,3 +24,4 @@ pub use loan::LoanRPC;
 pub use masternode::MasternodeRPC;
 pub use poolpair::PoolPairRPC;
 pub use token::TokenRPC;
+pub use vault::VaultRPC;
