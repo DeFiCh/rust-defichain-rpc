@@ -132,7 +132,7 @@ pub struct AuctionPagination {
 #[serde(rename_all = "camelCase")]
 pub struct AuctionPaginationStart {
     pub vault_id: String,
-    pub height: Option<u64>,
+    pub height: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
