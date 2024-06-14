@@ -61,14 +61,14 @@ pub struct VaultActive {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultLiquidation {
-    vault_id: String,
-    loan_scheme_id: String,
-    owner_address: String,
-    state: VaultState,
-    liquidation_height: u64,
-    liquidation_penalty: f64,
-    batch_count: u64,
-    batches: Vec<VaultLiquidationBatch>,
+    pub vault_id: String,
+    pub loan_scheme: LoanSchemeResult,
+    pub owner_address: String,
+    pub state: VaultState,
+    pub liquidation_height: u64,
+    pub liquidation_penalty: f64,
+    pub batch_count: usize,
+    pub batches: Vec<VaultLiquidationBatch>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
