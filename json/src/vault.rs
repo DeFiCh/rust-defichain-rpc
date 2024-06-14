@@ -26,6 +26,18 @@ pub enum VaultState {
     MayLiquidate,
 }
 
+impl std::fmt::Display for VaultState {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            VaultState::Unknown => write!(f, "Unknown"),
+            VaultState::Active => write!(f, "Active"),
+            VaultState::InLiquidation => write!(f, "InLiquidation"),
+            VaultState::Frozen => write!(f, "Frozen"),
+            VaultState::MayLiquidate => write!(f, "MayLiquidate"),
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Vault {
@@ -64,7 +76,7 @@ pub struct VaultLiquidation {
     pub vault_id: String,
     pub loan_scheme: LoanSchemeResult,
     pub owner_address: String,
-    pub state: VaultState,
+    pub state: String, // VaultState::InLiquidation
     pub liquidation_height: u64,
     pub liquidation_penalty: f64,
     pub batch_count: usize,
