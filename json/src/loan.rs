@@ -26,7 +26,7 @@ pub struct DestroyLoanScheme {
     activate_after_block: Option<u64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LoanSchemeResult {
     pub id: String,
     pub mincolratio: i64,
