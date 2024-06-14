@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use crate::loan::LoanSchemeResult;
-
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CreateVault {
@@ -74,7 +72,7 @@ pub struct VaultActive {
 #[serde(rename_all = "camelCase")]
 pub struct VaultLiquidation {
     pub vault_id: String,
-    pub loan_scheme: LoanSchemeResult,
+    pub loan_scheme_id: String,
     pub owner_address: String,
     pub state: String, // VaultState::InLiquidation
     pub liquidation_height: u64,
