@@ -123,9 +123,9 @@ pub struct PlaceAuctionBid {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AuctionPagination {
-    start: Option<AuctionPaginationStart>,
-    including_start: Option<bool>,
-    limit: Option<u64>,
+    pub start: Option<AuctionPaginationStart>,
+    pub including_start: Option<bool>,
+    pub limit: Option<u64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
