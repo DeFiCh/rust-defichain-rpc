@@ -125,7 +125,7 @@ pub struct PlaceAuctionBid {
 pub struct AuctionPagination {
     pub start: Option<AuctionPaginationStart>,
     pub including_start: Option<bool>,
-    pub limit: Option<u64>,
+    pub limit: Option<usize>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
