@@ -131,7 +131,7 @@ pub struct AuctionPagination {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AuctionPaginationStart {
-    pub vault_id: Option<String>,
+    pub vault_id: String,
     pub height: Option<u64>,
 }
 
