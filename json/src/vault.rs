@@ -157,8 +157,8 @@ pub struct VaultLiquidationBatch {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct HighestBid {
-    amount: String,
-    owner: String,
+    pub amount: String,
+    pub owner: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
