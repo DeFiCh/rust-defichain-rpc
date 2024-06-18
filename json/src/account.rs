@@ -107,7 +107,7 @@ pub struct AccountHistory {
     pub amounts: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct AccountHistoryOptions {
     max_block_height: Option<u64>,
