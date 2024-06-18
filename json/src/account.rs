@@ -116,7 +116,7 @@ pub struct AccountHistoryOptions {
     token: Option<String>,
     txtype: Option<char>,
     txtypes: Option<Vec<char>>,
-    limit: Option<u64>,
+    pub limit: Option<u64>,
     start: Option<u64>,
     including_start: Option<bool>,
     txn: Option<u64>,
