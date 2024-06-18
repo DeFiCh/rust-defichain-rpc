@@ -94,7 +94,7 @@ pub struct BalanceTransferAccountOptions {
     utxos: Option<Vec<UTXO>>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct AccountHistory {
     pub owner: String,
@@ -102,8 +102,8 @@ pub struct AccountHistory {
     block_hash: Option<String>,
     block_time: Option<u64>,
     r#type: String,
-    txn: u64,
-    txid: String,
+    txn: Option<u64>,
+    txid: Option<String>,
     pub amounts: Vec<String>,
 }
 
@@ -112,15 +112,47 @@ pub struct AccountHistory {
 pub struct AccountHistoryOptions {
     max_block_height: Option<u64>,
     depth: Option<u64>,
+    #[serde(rename = "no_rewards")]
     no_rewards: Option<bool>,
     token: Option<String>,
     txtype: Option<char>,
     txtypes: Option<Vec<char>>,
     limit: Option<u64>,
     start: Option<u64>,
+    #[serde(rename = "including_start")]
     including_start: Option<bool>,
     txn: Option<u64>,
     format: Option<Format>,
+}
+
+impl AccountHistoryOptions {
+    pub fn new(
+        max_block_height: Option<u64>,
+        depth: Option<u64>,
+        no_rewards: Option<bool>,
+        token: Option<String>,
+        txtype: Option<char>,
+        txtypes: Option<Vec<char>>,
+        limit: Option<u64>,
+        start: Option<u64>,
+        including_start: Option<bool>,
+        txn: Option<u64>,
+        format: Option<crate::account::Format>,
+    ) -> Self {
+        Self {
+            max_block_height,
+            depth,
+            no_rewards,
+            token,
+            txtype,
+            txtypes,
+            limit,
+            start,
+            including_start,
+            txn,
+            format,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
