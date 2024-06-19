@@ -9,7 +9,7 @@ pub enum OwnerType {
     All,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Format {
     Id,
@@ -30,7 +30,7 @@ pub enum TransferDomainType {
     Evm = 3,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ListAccountsPagination {
     start: Option<String>,
     including_start: Option<bool>,
@@ -109,7 +109,7 @@ pub struct AccountHistory {
     pub amounts: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AccountHistoryOptions {
     max_block_height: Option<u64>,
