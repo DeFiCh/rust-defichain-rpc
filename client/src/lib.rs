@@ -31,7 +31,7 @@ use json::bitcoin::consensus::{Decodable, ReadExt};
 use json::bitcoin::hex::HexToBytesIter;
 
 mod client;
-mod error;
+pub mod error;
 mod queryable;
 mod traits;
 

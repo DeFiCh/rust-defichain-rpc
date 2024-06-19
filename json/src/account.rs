@@ -9,7 +9,7 @@ pub enum OwnerType {
     All,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Format {
     Id,
@@ -30,11 +30,21 @@ pub enum TransferDomainType {
     Evm = 3,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ListAccountPagination {
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ListAccountsPagination {
     start: Option<String>,
     including_start: Option<bool>,
     limit: Option<u64>,
+}
+
+impl ListAccountsPagination {
+    pub fn new(start: Option<String>, including_start: Option<bool>, limit: Option<u64>) -> Self {
+        Self {
+            start,
+            including_start,
+            limit,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -44,33 +54,25 @@ pub struct GetAccountPagination {
     limit: Option<u64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct AccountResult<T, U> {
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
+pub struct AccountsResult<T, U> {
     key: String,
     owner: T,
     amount: U,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct AccountOwner {
+pub struct AccountsResultOwner {
     asm: String,
     hex: String,
-    req_sigs: i64,
+    req_sigs: Option<u64>,
     r#type: String,
-    addresses: Vec<String>,
+    addresses: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccountAmount(pub HashMap<String, f64>);
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ListAccountOptions {
-    indexed_amounts: Option<bool>,
-    is_mine_only: Option<bool>,
-}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -107,7 +109,7 @@ pub struct AccountHistory {
     pub amounts: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AccountHistoryOptions {
     max_block_height: Option<u64>,

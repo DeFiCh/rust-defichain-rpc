@@ -28,7 +28,7 @@ use json::bitcoin::Txid;
 use jsonrpc_async;
 use log::Level::{Debug, Trace, Warn};
 use serde::{self, Serialize};
-use serde_json::{self, json, Map};
+use serde_json::{self, Map};
 
 use crate::error::*;
 use crate::json;
@@ -892,7 +892,7 @@ pub trait RpcApi: Sized {
     ) -> Result<Vec<json::TestMempoolAcceptResult>> {
         let hexes: Vec<serde_json::Value> =
             rawtxs.to_vec().into_iter().map(|r| r.raw_hex().into()).collect();
-        let mut args = [into_json(hexes)?, opt_into_json(max_fee_rate)?];
+        let args = [into_json(hexes)?, opt_into_json(max_fee_rate)?];
         self.call("testmempoolaccept", &args).await
     }
 
@@ -1121,7 +1121,7 @@ pub trait RpcApi: Sized {
         tx: R,
         max_fee_rate: Option<u64>,
     ) -> Result<bitcoin::Txid> {
-        let mut args = [into_json(tx.raw_hex())?, opt_into_json(max_fee_rate)?];
+        let args = [into_json(tx.raw_hex())?, opt_into_json(max_fee_rate)?];
         self.call("sendrawtransaction", &args).await
     }
 
