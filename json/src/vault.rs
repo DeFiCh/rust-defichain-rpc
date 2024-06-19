@@ -1,4 +1,7 @@
 use std::collections::HashMap;
+use serde::{
+    Deserialize, Serialize, Serializer,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -14,8 +17,7 @@ pub struct UpdateVault {
     loan_scheme_id: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Debug, Deserialize)]
 pub enum VaultState {
     Unknown,
     Active,
@@ -24,16 +26,23 @@ pub enum VaultState {
     MayLiquidate,
 }
 
-impl std::fmt::Display for VaultState {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            VaultState::Unknown => write!(f, "Unknown"),
-            VaultState::Active => write!(f, "Active"),
-            VaultState::InLiquidation => write!(f, "InLiquidation"),
-            VaultState::Frozen => write!(f, "Frozen"),
-            VaultState::MayLiquidate => write!(f, "MayLiquidate"),
+impl Serialize for VaultState {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match *self {
+            VaultState::Unknown => serializer.serialize_str("UNKNOWN"),
+            VaultState::Active => serializer.serialize_str("ACTIVE"),
+            VaultState::InLiquidation => serializer.serialize_str("IN_LIQUIDATION"),
+            VaultState::Frozen => serializer.serialize_str("FROZEN"),
+            VaultState::MayLiquidate => serializer.serialize_str("MAY_LIQUIDATE"),
         }
     }
+}
+
+impl VaultState {
+    fn in_liquidation() -> Self { VaultState::InLiquidation }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -74,7 +83,8 @@ pub struct VaultLiquidation {
     pub vault_id: String,
     pub loan_scheme_id: String,
     pub owner_address: String,
-    pub state: String, // VaultState::InLiquidation
+    #[serde(default = "VaultState::in_liquidation")]
+    pub state: VaultState,
     pub liquidation_height: u64,
     pub liquidation_penalty: f64,
     pub batch_count: usize,
