@@ -61,12 +61,6 @@ pub trait VaultRPC: RpcApi {
 
 #[async_trait]
 impl VaultRPC for Client {
-    async fn list_auctions(
-        &self,
-        pagination: Option<AuctionPagination>
-    ) -> Result<Vec<VaultLiquidation>> {
-        self.call("listauctions", &[obj_into_json(pagination)?]).await
-    }
     async fn close_vault(&self, close_vault: CloseVault, utxos: Option<UTXO>) -> Result<String> {
         self.call("closevault", &[into_json(close_vault)?, into_json(utxos)?]).await
     }
@@ -113,8 +107,11 @@ impl VaultRPC for Client {
     ) -> Result<Vec<ListAuctionHistoryDetail>> {
         self.call("listauctionhistory", &[into_json(owner)?, into_json(pagination)?]).await
     }
-    async fn list_auctions(&self, pagination: Option<AuctionPagination>) -> Result<Vec<VaultLiquidation>> {
-        self.call("listauctions", &[into_json(pagination)?]).await
+    async fn list_auctions(
+        &self,
+        pagination: Option<AuctionPagination>
+    ) -> Result<Vec<VaultLiquidation>> {
+        self.call("listauctions", &[obj_into_json(pagination)?]).await
     }
     async fn list_vaults(
         &self,
