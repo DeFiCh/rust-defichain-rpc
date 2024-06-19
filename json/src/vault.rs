@@ -1,6 +1,7 @@
-use std::collections::HashMap;
+use std::{fmt, collections::HashMap};
 use serde::{
-    Deserialize, Serialize, Serializer,
+    de::{Error, MapAccess, Visitor},
+    Deserialize, Deserializer, Serialize, Serializer,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -17,7 +18,7 @@ pub struct UpdateVault {
     loan_scheme_id: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug)]
 pub enum VaultState {
     Unknown,
     Active,
@@ -27,10 +28,7 @@ pub enum VaultState {
 }
 
 impl Serialize for VaultState {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         match *self {
             VaultState::Unknown => serializer.serialize_str("unknown"),
             VaultState::Active => serializer.serialize_str("active"),
@@ -38,6 +36,33 @@ impl Serialize for VaultState {
             VaultState::Frozen => serializer.serialize_str("frozen"),
             VaultState::MayLiquidate => serializer.serialize_str("mayLiquidate"),
         }
+    }
+}
+
+impl<'a> Deserialize<'a> for VaultState {
+    fn deserialize<D: Deserializer<'a>>(deserializer: D) -> Result<VaultState, D::Error> {
+        struct VaultStateVisitor;
+
+        impl<'de> Visitor<'de> for VaultStateVisitor {
+            type Value = VaultState;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("`Unknown`, `Active`, `InLiquidation`, `Frozon`, `MayLiquidate`")
+            }
+
+            fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E>
+            {
+                match v {
+                    "active" => Ok(VaultState::Active),
+                    "inLiquidation" => Ok(VaultState::InLiquidation),
+                    "frozen" => Ok(VaultState::Frozen),
+                    "mayLiquidation" => Ok(VaultState::MayLiquidate),
+                    _ => Ok(VaultState::Unknown),
+                }
+            }
+        }
+
+        deserializer.deserialize_identifier(VaultStateVisitor)
     }
 }
 
