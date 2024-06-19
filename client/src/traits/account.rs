@@ -48,13 +48,13 @@ pub trait AccountRPC: RpcApi {
         owner: Option<String>,
         options: AccountHistoryOptions,
     ) -> Result<Vec<AccountHistory>>;
-    // TODO handle AccountResult enum type
-    // async fn list_accounts(
-    //     &self,
-    //     pagination: Option<ListAccountPagination>,
-    //     verbose: Option<bool>,
-    //     options: Option<ListAccountOptions>,
-    // ) -> Result<Vec<AccountResult<String, String>>>;
+    async fn list_accounts(
+        &self,
+        pagination: Option<ListAccountsPagination>,
+        verbose: Option<bool>,
+        indexed_amounts: Option<bool>,
+        is_mine_only: Option<bool>,
+    ) -> Result<Vec<AccountsResult<AccountsResultOwner, String>>>;
     async fn list_burn_history(&self, options: BurnHistoryOptions) -> Result<Vec<BurnHistory>>;
     async fn list_community_balances(&self) -> Result<CommunityBalanceData>;
     async fn list_pending_dusd_swaps(&self) -> Result<Vec<DusdSwapsInfo>>;
@@ -157,17 +157,24 @@ impl AccountRPC for Client {
     ) -> Result<Vec<AccountHistory>> {
         self.call("listaccounthistory", &[into_json(owner)?, into_json(options)?]).await
     }
-    // async fn list_accounts(
-    //     &self,
-    //     pagination: Option<ListAccountPagination>,
-    //     verbose: Option<bool>,
-    //     options: Option<ListAccountOptions>,
-    // ) -> Result<Vec<AccountResult<String, String>>> {
-    //     self.call(
-    //         "listaccounts",
-    //         &[into_json(pagination)?, into_json(verbose)?, into_json(options)?],
-    //     )
-    // }
+    async fn list_accounts(
+        &self,
+        pagination: Option<ListAccountsPagination>,
+        verbose: Option<bool>,
+        indexed_amounts: Option<bool>,
+        is_mine_only: Option<bool>,
+    ) -> Result<Vec<AccountsResult<AccountsResultOwner, String>>> {
+        self.call(
+            "listaccounts",
+            &[
+                into_json(pagination)?,
+                into_json(verbose)?,
+                into_json(indexed_amounts)?,
+                into_json(is_mine_only)?,
+            ],
+        )
+        .await
+    }
     async fn list_burn_history(&self, options: BurnHistoryOptions) -> Result<Vec<BurnHistory>> {
         self.call("listburnhistory", &[into_json(options)?]).await
     }
