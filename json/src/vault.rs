@@ -1,6 +1,6 @@
 use std::{fmt, collections::HashMap};
 use serde::{
-    de::{Error, MapAccess, Visitor},
+    de::{Error, Visitor},
     Deserialize, Deserializer, Serialize, Serializer,
 };
 
