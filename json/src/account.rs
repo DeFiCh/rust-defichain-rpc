@@ -71,8 +71,8 @@ pub struct AccountsResultOwner {
     addresses: Option<Vec<String>>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct AccountAmount(pub HashMap<String, f64>);
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
+pub struct AccountAmount(pub Vec<String>);
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
