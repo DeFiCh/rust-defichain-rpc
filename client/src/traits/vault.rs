@@ -2,11 +2,7 @@ use crate::{Result, RpcApi};
 use async_trait::async_trait;
 use defichain_rpc_json::{common::UTXO, vault::*};
 
-use crate::{obj_into_json, Client, Result, RpcApi};
-use async_trait::async_trait;
-use defichain_rpc_json::vault::*;
-
-use crate::{into_json, Client, Result, RpcApi};
+use crate::{into_json, obj_into_json, Client, Result, RpcApi};
 
 #[async_trait]
 pub trait VaultRPC: RpcApi {
