@@ -32,11 +32,11 @@ impl Serialize for VaultState {
         S: Serializer,
     {
         match *self {
-            VaultState::Unknown => serializer.serialize_str("UNKNOWN"),
-            VaultState::Active => serializer.serialize_str("ACTIVE"),
-            VaultState::InLiquidation => serializer.serialize_str("IN_LIQUIDATION"),
-            VaultState::Frozen => serializer.serialize_str("FROZEN"),
-            VaultState::MayLiquidate => serializer.serialize_str("MAY_LIQUIDATE"),
+            VaultState::Unknown => serializer.serialize_str("unknown"),
+            VaultState::Active => serializer.serialize_str("active"),
+            VaultState::InLiquidation => serializer.serialize_str("inLiquidation"),
+            VaultState::Frozen => serializer.serialize_str("frozen"),
+            VaultState::MayLiquidate => serializer.serialize_str("mayLiquidate"),
         }
     }
 }
