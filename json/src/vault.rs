@@ -148,7 +148,7 @@ pub struct AuctionPaginationStart {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultLiquidationBatch {
-    pub index: u64,
+    pub index: u32,
     pub collaterals: Vec<String>,
     pub loan: String,
     pub highest_bid: Option<HighestBid>,
