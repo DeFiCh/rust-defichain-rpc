@@ -54,7 +54,7 @@ pub trait AccountRPC: RpcApi {
         verbose: Option<bool>,
         indexed_amounts: Option<bool>,
         is_mine_only: Option<bool>,
-    ) -> Result<Vec<AccountsResult<AccountsResultOwner, String>>>;
+    ) -> Result<Vec<AccountsResult>>;
     async fn list_burn_history(&self, options: BurnHistoryOptions) -> Result<Vec<BurnHistory>>;
     async fn list_community_balances(&self) -> Result<CommunityBalanceData>;
     async fn list_pending_dusd_swaps(&self) -> Result<Vec<DusdSwapsInfo>>;
@@ -163,7 +163,7 @@ impl AccountRPC for Client {
         verbose: Option<bool>,
         indexed_amounts: Option<bool>,
         is_mine_only: Option<bool>,
-    ) -> Result<Vec<AccountsResult<AccountsResultOwner, String>>> {
+    ) -> Result<Vec<AccountsResult>> {
         self.call(
             "listaccounts",
             &[
