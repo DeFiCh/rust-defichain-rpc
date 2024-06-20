@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use crate::common::UTXO;
 
@@ -78,7 +78,7 @@ pub enum AccountsResultOwner {
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum AccountsResultAmount {
-    Map(HashMap<String, f64>),
+    Map(BTreeMap<String, f64>),
     String(String),
 }
 
@@ -86,7 +86,7 @@ pub enum AccountsResultAmount {
 #[serde(untagged)]
 pub enum AccountAmount {
     List(Vec<String>),
-    Map(HashMap<String, f64>),
+    Map(BTreeMap<String, f64>),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
