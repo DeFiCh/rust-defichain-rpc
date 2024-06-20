@@ -54,25 +54,40 @@ pub struct GetAccountPagination {
     limit: Option<u64>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
-pub struct AccountsResult<T, U> {
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct AccountsResult {
     key: String,
-    owner: T,
-    amount: U,
+    owner: AccountsResultOwner,
+    amount: AccountsResultAmount,
 }
 
-#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct AccountsResultOwner {
-    asm: String,
-    hex: String,
-    req_sigs: Option<u64>,
-    r#type: String,
-    addresses: Option<Vec<String>>,
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(untagged)]
+pub enum AccountsResultOwner {
+    #[serde(rename_all = "camelCase")]
+    Detailed {
+        asm: String,
+        hex: String,
+        req_sigs: Option<u64>,
+        r#type: String,
+        addresses: Option<Vec<String>>,
+    },
+    Simple(String),
 }
 
-#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
-pub struct AccountAmount(pub Vec<String>);
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[serde(untagged)]
+pub enum AccountsResultAmount {
+    Map(HashMap<String, f64>),
+    String(String),
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[serde(untagged)]
+pub enum AccountAmount {
+    List(Vec<String>),
+    Map(HashMap<String, f64>),
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -104,6 +119,9 @@ pub struct AccountHistory {
     block_hash: Option<String>,
     block_time: Option<u64>,
     r#type: String,
+    reward_type: Option<String>,
+    #[serde(rename = "poolID")]
+    pool_id: Option<String>,
     txn: Option<u64>,
     txid: Option<String>,
     pub amounts: Vec<String>,
