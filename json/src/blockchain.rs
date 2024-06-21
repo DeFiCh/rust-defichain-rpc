@@ -79,7 +79,7 @@ pub struct BlockHeader {
     nextblockhash: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Transaction {
     pub txid: Txid,
@@ -94,28 +94,28 @@ pub struct Transaction {
     pub hex: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptSig {
     asm: String,
     pub hex: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(untagged)]
 pub enum Vin {
     Coinbase(VinCoinbase),
     Standard(VinStandard),
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct VinCoinbase {
     pub coinbase: String,
     pub sequence: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct VinStandard {
     pub txid: Txid,
@@ -125,7 +125,7 @@ pub struct VinStandard {
     pub sequence: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
     pub value: f64,
@@ -157,7 +157,7 @@ pub struct TxOutSetInfo {
     total_amount: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptPubKey {
     pub asm: String,
