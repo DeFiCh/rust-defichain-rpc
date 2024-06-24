@@ -119,7 +119,7 @@ pub struct VinCoinbase {
 #[serde(rename_all = "camelCase")]
 pub struct VinStandard {
     pub txid: Txid,
-    pub vout: u64,
+    pub vout: usize,
     pub script_sig: ScriptSig,
     pub txinwitness: Option<Vec<String>>,
     pub sequence: i64,
