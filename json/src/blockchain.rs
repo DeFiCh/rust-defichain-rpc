@@ -129,9 +129,9 @@ pub struct VinStandard {
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
     pub value: f64,
-    pub n: u64,
+    pub n: usize,
     pub script_pub_key: ScriptPubKey,
-    pub token_id: Option<u64>,
+    pub token_id: Option<u32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
