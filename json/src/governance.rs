@@ -88,7 +88,7 @@ pub struct ProposalInfo {
     pub context_hash: String,
     pub r#type: ProposalType,
     pub status: ProposalStatus,
-    pub amount: Option<f64>,
+    pub amount: Option<String>,
     pub current_cycle: u64,
     pub total_cycles: u64,
     pub creation_height: u64,
