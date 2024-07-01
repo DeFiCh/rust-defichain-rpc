@@ -2,7 +2,7 @@ use crate::{Result, RpcApi};
 use async_trait::async_trait;
 use defichain_rpc_json::{common::UTXO, vault::*};
 
-use crate::{into_json, Client, Result, RpcApi};
+use crate::{into_json, obj_into_json, Client, Result, RpcApi};
 
 #[async_trait]
 pub trait VaultRPC: RpcApi {
@@ -31,7 +31,7 @@ pub trait VaultRPC: RpcApi {
         owner: Option<String>,
         pagination: Option<ListAuctionHistoryPagination>,
     ) -> Result<Vec<ListAuctionHistoryDetail>>;
-    async fn list_auctions(&self, pagination: AuctionPagination) -> Result<Vec<VaultLiquidation>>;
+    async fn list_auctions(&self, pagination: Option<AuctionPagination>) -> Result<Vec<VaultLiquidation>>;
     async fn list_vaults(
         &self,
         options: ListVaultOptions,
@@ -103,8 +103,11 @@ impl VaultRPC for Client {
     ) -> Result<Vec<ListAuctionHistoryDetail>> {
         self.call("listauctionhistory", &[into_json(owner)?, into_json(pagination)?]).await
     }
-    async fn list_auctions(&self, pagination: AuctionPagination) -> Result<Vec<VaultLiquidation>> {
-        self.call("listauctions", &[into_json(pagination)?]).await
+    async fn list_auctions(
+        &self,
+        pagination: Option<AuctionPagination>
+    ) -> Result<Vec<VaultLiquidation>> {
+        self.call("listauctions", &[obj_into_json(pagination)?]).await
     }
     async fn list_vaults(
         &self,

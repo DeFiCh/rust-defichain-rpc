@@ -1,6 +1,8 @@
-use std::collections::HashMap;
-
-use crate::loan::LoanSchemeResult;
+use std::{fmt, collections::HashMap};
+use serde::{
+    de::{Error, Visitor},
+    Deserialize, Deserializer, Serialize, Serializer,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -16,14 +18,56 @@ pub struct UpdateVault {
     loan_scheme_id: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Debug)]
 pub enum VaultState {
     Unknown,
     Active,
     InLiquidation,
     Frozen,
     MayLiquidate,
+}
+
+impl Serialize for VaultState {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        match *self {
+            VaultState::Unknown => serializer.serialize_str("unknown"),
+            VaultState::Active => serializer.serialize_str("active"),
+            VaultState::InLiquidation => serializer.serialize_str("inLiquidation"),
+            VaultState::Frozen => serializer.serialize_str("frozen"),
+            VaultState::MayLiquidate => serializer.serialize_str("mayLiquidate"),
+        }
+    }
+}
+
+impl<'a> Deserialize<'a> for VaultState {
+    fn deserialize<D: Deserializer<'a>>(deserializer: D) -> Result<VaultState, D::Error> {
+        struct VaultStateVisitor;
+
+        impl<'de> Visitor<'de> for VaultStateVisitor {
+            type Value = VaultState;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("`Unknown`, `Active`, `InLiquidation`, `Frozon`, `MayLiquidate`")
+            }
+
+            fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E>
+            {
+                match v {
+                    "active" => Ok(VaultState::Active),
+                    "inLiquidation" => Ok(VaultState::InLiquidation),
+                    "frozen" => Ok(VaultState::Frozen),
+                    "mayLiquidation" => Ok(VaultState::MayLiquidate),
+                    _ => Ok(VaultState::Unknown),
+                }
+            }
+        }
+
+        deserializer.deserialize_identifier(VaultStateVisitor)
+    }
+}
+
+impl VaultState {
+    fn in_liquidation() -> Self { VaultState::InLiquidation }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -61,14 +105,15 @@ pub struct VaultActive {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultLiquidation {
-    vault_id: String,
-    loan_scheme_id: String,
-    owner_address: String,
-    state: VaultState,
-    liquidation_height: u64,
-    liquidation_penalty: f64,
-    batch_count: u64,
-    batches: Vec<VaultLiquidationBatch>,
+    pub vault_id: String,
+    pub loan_scheme_id: String,
+    pub owner_address: String,
+    #[serde(default = "VaultState::in_liquidation")]
+    pub state: VaultState,
+    pub liquidation_height: u64,
+    pub liquidation_penalty: f64,
+    pub batch_count: usize,
+    pub batches: Vec<VaultLiquidationBatch>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -123,32 +168,32 @@ pub struct PlaceAuctionBid {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AuctionPagination {
-    start: Option<AuctionPaginationStart>,
-    including_start: Option<bool>,
-    limit: Option<u64>,
+    pub start: Option<AuctionPaginationStart>,
+    pub including_start: Option<bool>,
+    pub limit: Option<usize>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AuctionPaginationStart {
-    vault_id: Option<String>,
-    height: Option<u64>,
+    pub vault_id: String,
+    pub height: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultLiquidationBatch {
-    index: usize,
-    collaterals: Vec<String>,
-    loan: String,
-    highest_bid: Option<HighestBid>,
+    pub index: u32,
+    pub collaterals: Vec<String>,
+    pub loan: String,
+    pub highest_bid: Option<HighestBid>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct HighestBid {
-    amount: String,
-    owner: String,
+    pub amount: String,
+    pub owner: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
