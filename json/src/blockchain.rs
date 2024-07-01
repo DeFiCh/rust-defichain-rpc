@@ -31,7 +31,7 @@ pub struct BlockchainInfo {
     warnings: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Block<T> {
     pub hash: BlockHash,
@@ -79,7 +79,7 @@ pub struct BlockHeader {
     nextblockhash: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Transaction {
     pub txid: Txid,
@@ -94,44 +94,44 @@ pub struct Transaction {
     pub hex: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptSig {
     asm: String,
     pub hex: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(untagged)]
 pub enum Vin {
     Coinbase(VinCoinbase),
     Standard(VinStandard),
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct VinCoinbase {
     pub coinbase: String,
     pub sequence: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct VinStandard {
     pub txid: Txid,
-    pub vout: u64,
+    pub vout: usize,
     pub script_sig: ScriptSig,
     pub txinwitness: Option<Vec<String>>,
     pub sequence: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
     pub value: f64,
-    pub n: u64,
+    pub n: usize,
     pub script_pub_key: ScriptPubKey,
-    pub token_id: Option<u64>,
+    pub token_id: Option<u32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -157,7 +157,7 @@ pub struct TxOutSetInfo {
     total_amount: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ScriptPubKey {
     pub asm: String,
