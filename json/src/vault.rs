@@ -135,9 +135,9 @@ pub struct WithdrawVault {
 #[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultPagination {
-    start: Option<String>,
-    including_start: Option<bool>,
-    limit: Option<usize>,
+    pub start: Option<String>,
+    pub including_start: Option<bool>,
+    pub limit: Option<usize>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
