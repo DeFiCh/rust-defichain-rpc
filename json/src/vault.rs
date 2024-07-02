@@ -137,7 +137,7 @@ pub struct WithdrawVault {
 pub struct VaultPagination {
     start: Option<String>,
     including_start: Option<bool>,
-    limit: Option<u64>,
+    limit: Option<usize>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
