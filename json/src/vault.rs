@@ -82,24 +82,24 @@ pub struct Vault {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultActive {
-    vault_id: String,
-    loan_scheme_id: String,
-    owner_address: String,
-    state: VaultState,
-    collateral_amounts: Vec<String>,
-    loan_amounts: Vec<String>,
-    interest_amounts: Vec<String>,
-    collateral_value: f64,
-    loan_value: f64,
-    interest_value: f64,
-    collateral_ratio: i64,
-    informative_ratio: f64,
+    pub vault_id: String,
+    pub loan_scheme_id: String,
+    pub owner_address: String,
+    pub state: VaultState,
+    pub collateral_amounts: Vec<String>,
+    pub loan_amounts: Vec<String>,
+    pub interest_amounts: Vec<String>,
+    pub collateral_value: f64,
+    pub loan_value: f64,
+    pub interest_value: f64,
+    pub collateral_ratio: i64,
+    pub informative_ratio: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
-    next_collateral_ratio: Option<i64>,
+    pub next_collateral_ratio: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    interest_per_block_value: Option<String>,
+    pub interest_per_block_value: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    interests_per_block: Option<Vec<String>>,
+    pub interests_per_block: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
