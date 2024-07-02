@@ -1,4 +1,3 @@
-use crate::{Result, RpcApi};
 use async_trait::async_trait;
 use defichain_rpc_json::{common::UTXO, vault::*};
 
