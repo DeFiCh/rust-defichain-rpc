@@ -136,7 +136,7 @@ pub struct ListVotesResult {
 pub struct ListProposalsOptions {
     pub r#type: Option<ListProposalsType>,
     pub status: Option<ListProposalsStatus>,
-    pub cycle: Option<u64>,
+    pub cycle: Option<i64>,
     pub pagination: Option<ListProposalsPagination>,
 }
 
@@ -154,7 +154,7 @@ pub struct ListProposalsPagination {
 pub struct ListGovProposalVotesOptions {
     pub proposal_id: Option<Txid>,
     pub masternode: Option<String>,
-    pub cycle: Option<u64>,
+    pub cycle: Option<i64>,
     pub pagination: Option<ListGovProposalVotesPagination>,
     pub aggregate: Option<bool>,
     pub valid: Option<bool>,
