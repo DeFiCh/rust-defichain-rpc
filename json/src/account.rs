@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, HashMap};
 
-use bitcoin::Txid;
+use bitcoin::{BlockHash, Txid};
 
 use crate::common::UTXO;
 
@@ -118,7 +118,7 @@ pub struct BalanceTransferAccountOptions {
 pub struct AccountHistory {
     pub owner: String,
     pub block_height: u64,
-    pub block_hash: Option<String>,
+    pub block_hash: Option<BlockHash>,
     pub block_time: Option<u64>,
     pub r#type: String,
     pub reward_type: Option<String>,
