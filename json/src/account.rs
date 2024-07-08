@@ -1,5 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 
+use bitcoin::Txid;
+
 use crate::common::UTXO;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -115,15 +117,15 @@ pub struct BalanceTransferAccountOptions {
 #[serde(rename_all = "camelCase")]
 pub struct AccountHistory {
     pub owner: String,
-    block_height: u64,
-    block_hash: Option<String>,
-    block_time: Option<u64>,
-    r#type: String,
-    reward_type: Option<String>,
+    pub block_height: u64,
+    pub block_hash: Option<String>,
+    pub block_time: Option<u64>,
+    pub r#type: String,
+    pub reward_type: Option<String>,
     #[serde(rename = "poolID")]
-    pool_id: Option<String>,
-    txn: Option<u64>,
-    txid: Option<String>,
+    pub pool_id: Option<String>,
+    pub txn: Option<u64>,
+    pub txid: Option<Txid>,
     pub amounts: Vec<String>,
 }
 
