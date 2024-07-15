@@ -1,4 +1,8 @@
-use std::collections::HashMap;
+use std::{fmt, collections::HashMap};
+use serde::{
+    de::{Error, Visitor},
+    Deserialize, Deserializer, Serialize, Serializer,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -14,8 +18,7 @@ pub struct UpdateVault {
     loan_scheme_id: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "UPPERCASE")]
+#[derive(Debug)]
 pub enum VaultState {
     Unknown,
     Active,
@@ -23,6 +26,50 @@ pub enum VaultState {
     Frozen,
     MayLiquidate,
 }
+
+impl Serialize for VaultState {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        match *self {
+            VaultState::Unknown => serializer.serialize_str("unknown"),
+            VaultState::Active => serializer.serialize_str("active"),
+            VaultState::InLiquidation => serializer.serialize_str("inLiquidation"),
+            VaultState::Frozen => serializer.serialize_str("frozen"),
+            VaultState::MayLiquidate => serializer.serialize_str("mayLiquidate"),
+        }
+    }
+}
+
+impl<'a> Deserialize<'a> for VaultState {
+    fn deserialize<D: Deserializer<'a>>(deserializer: D) -> Result<VaultState, D::Error> {
+        struct VaultStateVisitor;
+
+        impl<'de> Visitor<'de> for VaultStateVisitor {
+            type Value = VaultState;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("`Unknown`, `Active`, `InLiquidation`, `Frozon`, `MayLiquidate`")
+            }
+
+            fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E>
+            {
+                match v {
+                    "active" => Ok(VaultState::Active),
+                    "inLiquidation" => Ok(VaultState::InLiquidation),
+                    "frozen" => Ok(VaultState::Frozen),
+                    "mayLiquidation" => Ok(VaultState::MayLiquidate),
+                    _ => Ok(VaultState::Unknown),
+                }
+            }
+        }
+
+        deserializer.deserialize_identifier(VaultStateVisitor)
+    }
+}
+
+impl VaultState {
+    fn in_liquidation() -> Self { VaultState::InLiquidation }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Vault {
@@ -35,26 +82,38 @@ pub struct Vault {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultActive {
-    collateral_amounts: Vec<String>,
-    loan_amounts: Vec<String>,
-    interest_amounts: Vec<String>,
-    collateral_value: i64,
-    loan_value: i64,
-    interest_value: i64,
-    collateral_ratio: u64,
-    informative_ratio: i64,
-    next_collateral_ratio: Option<i64>,
-    interest_per_block_value: Option<String>,
-    interests_per_block: Option<Vec<String>>,
+    pub vault_id: String,
+    pub loan_scheme_id: String,
+    pub owner_address: String,
+    pub state: VaultState,
+    pub collateral_amounts: Vec<String>,
+    pub loan_amounts: Vec<String>,
+    pub interest_amounts: Vec<String>,
+    pub collateral_value: f64,
+    pub loan_value: f64,
+    pub interest_value: f64,
+    pub collateral_ratio: i64,
+    pub informative_ratio: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub next_collateral_ratio: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub interest_per_block_value: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub interests_per_block: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultLiquidation {
-    liquidation_height: u64,
-    liquidation_penalty: u64,
-    batch_count: u64,
-    batches: Vec<VaultLiquidationBatch>,
+    pub vault_id: String,
+    pub loan_scheme_id: String,
+    pub owner_address: String,
+    #[serde(default = "VaultState::in_liquidation")]
+    pub state: VaultState,
+    pub liquidation_height: u64,
+    pub liquidation_penalty: f64,
+    pub batch_count: usize,
+    pub batches: Vec<VaultLiquidationBatch>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -73,21 +132,21 @@ pub struct WithdrawVault {
     amount: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultPagination {
-    start: Option<String>,
-    including_start: Option<bool>,
-    limit: Option<u64>,
+    pub start: Option<String>,
+    pub including_start: Option<bool>,
+    pub limit: Option<usize>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct ListVaultOptions {
-    owner_address: Option<String>,
-    loan_scheme_id: Option<String>,
-    state: Option<VaultState>,
-    verbose: Option<bool>,
+    pub owner_address: Option<String>,
+    pub loan_scheme_id: Option<String>,
+    pub state: Option<VaultState>,
+    pub verbose: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -109,32 +168,32 @@ pub struct PlaceAuctionBid {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AuctionPagination {
-    start: Option<AuctionPaginationStart>,
-    including_start: Option<bool>,
-    limit: Option<u64>,
+    pub start: Option<AuctionPaginationStart>,
+    pub including_start: Option<bool>,
+    pub limit: Option<usize>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AuctionPaginationStart {
-    vault_id: Option<String>,
-    height: Option<u64>,
+    pub vault_id: String,
+    pub height: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct VaultLiquidationBatch {
-    index: u64,
-    collaterals: Vec<String>,
-    loan: String,
-    highest_bid: Option<HighestBid>,
+    pub index: u32,
+    pub collaterals: Vec<String>,
+    pub loan: String,
+    pub highest_bid: Option<HighestBid>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct HighestBid {
-    amount: String,
-    owner: String,
+    pub amount: String,
+    pub owner: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -170,3 +229,11 @@ pub struct VaultEstimation {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TokenPercentageSplit(HashMap<String, u64>);
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum VaultResult {
+    VaultActive(VaultActive), // Verbose active
+    VaultLiquidation(VaultLiquidation), // Verbose in liquidation
+                              // Vault(Vault),                       // Any state non-verbose
+}
